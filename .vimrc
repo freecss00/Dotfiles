@@ -15,6 +15,7 @@ set noswapfile
 " system
 "-------------------------------------------------------------
 set wildmenu
+set showmatch
 set confirm
 set autoread
 set infercase
@@ -25,8 +26,11 @@ set novisualbell
 set visualbell t_vb=
 set virtualedit=block
 set secure
+set clipboard=unnamed,autoselect
 
 " color scheme
+syntax enable
+set t_Co=256
 colorscheme molokai
 
 
@@ -41,8 +45,8 @@ cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
-cnoremap <C-f> <Left>
-cnoremap <C-b> <Right>
+cnoremap <C-f> <Right>
+cnoremap <C-b> <Left>
 
 " be can move the cursol to virtual display line
 nnoremap j gj
@@ -56,9 +60,10 @@ nnoremap gk k
 "-------------------------------------------------------------
 set ignorecase
 set smartcase
+set wrapscan
 set hlsearch
 set incsearch
-set wrapscan
+" nnoremap <Esc><Esc> :nohlsearch<CR>
 
 " display search key at the center of screen
 nnoremap n nzz
@@ -94,5 +99,148 @@ noremap  <C-s> <Esc>
 noremap! <C-s> <Esc>
 nnoremap Y y%
 
-inoremap ( ()<Left>
-inoremap { {}<Left>
+
+
+"-------------------------------------------------------------
+" plugin
+"-------------------------------------------------------------
+
+"-------------------------------------------------------------
+" dein.vim
+"-------------------------------------------------------------
+if &compatible
+    set nocompatible
+endif
+set runtimepath^=~/.vim/dein/dein.vim
+
+call dein#begin('~/.cache/dein')
+
+call dein#add('Shougo/dein.vim')
+call dein#add('Shougo/vimproc.vim', {
+    \ 'build':{
+    \    'windows': 'tool\\update-dll-mingw',
+    \    'cygwin': 'make -f make_cygwin.mak',
+    \    'mac': 'make -f make_mac.mak',
+    \    'linux': 'make',
+    \    'unix': 'gmake',
+    \    },
+    \ })
+
+call dein#add('Shougo/neocomplete.vim')
+call dein#add('Shougo/neomru.vim')
+call dein#add('Shougo/neosnippet.vim')
+call dein#add('Shougo/neosnippet-snippets')
+call dein#add('Shougo/vimfiler')
+
+call dein#add('tomtom/tcomment_vim')
+call dein#add('lilydjwg/colorizer')
+call dein#add('itchyny/lightline.vim')
+call dein#add('nathanaelkane/vim-indent-guides')
+call dein#add('Townk/vim-autoclose')
+call dein#add('tpope/vim-surround')
+call dein#add('thinca/vim-quickrun')
+call dein#add('junegunn/vim-easy-align',{
+    \ 'autoload': {
+    \ 'commands': ['EasyAlign'],
+    \ 'mappings': ['<Plug>(EasyAlign)'],
+    \ }})
+    
+
+call dein#end()
+call dein#save_state()
+
+if has('vim_starting') && dein#check_install()
+    call dein#install()
+endif
+
+filetype plugin indent on
+
+
+"-------------------------------------------------------------
+" vim-easy-align
+"-------------------------------------------------------------
+vnoremap <Enter> <Plug>(EasyAlign)
+nnoremap ga <Plug>(EasyAlign))
+
+
+"-------------------------------------------------------------
+" lightline.vim
+"-------------------------------------------------------------
+set laststatus=2
+set noshowmode
+
+
+"-------------------------------------------------------------
+" neocomplete.vim
+"-------------------------------------------------------------
+"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+    \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword cha
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+" AutoComplPop like behavior.
+"let g:neocomplete#enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
