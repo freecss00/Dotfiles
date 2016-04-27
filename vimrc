@@ -27,11 +27,7 @@ set visualbell t_vb=
 set virtualedit=block
 set secure
 set clipboard=unnamed,autoselect
-
-" color scheme
-syntax enable
-set t_Co=256
-colorscheme molokai
+set timeout timeoutlen=200
 
 
 "-------------------------------------------------------------
@@ -63,7 +59,7 @@ set smartcase
 set wrapscan
 set hlsearch
 set incsearch
-" nnoremap <Esc><Esc> :nohlsearch<CR>
+nnoremap <Esc><Esc> :nohlsearch<CR>
 
 " display search key at the center of screen
 nnoremap n nzz
@@ -97,8 +93,14 @@ set textwidth=0
 "-------------------------------------------------------------
 noremap  <C-s> <Esc>
 noremap! <C-s> <Esc>
-nnoremap Y y%
+nnoremap Y y$
 
+"moving to any window
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+nnoremap <C-w> <C-w>w
 
 
 "-------------------------------------------------------------
@@ -131,6 +133,7 @@ call dein#add('Shougo/neomru.vim')
 call dein#add('Shougo/neosnippet.vim')
 call dein#add('Shougo/neosnippet-snippets')
 call dein#add('Shougo/vimfiler')
+call dein#add('Shougo/unite.vim')
 
 call dein#add('tomtom/tcomment_vim')
 call dein#add('lilydjwg/colorizer')
@@ -157,6 +160,26 @@ filetype plugin indent on
 
 
 "-------------------------------------------------------------
+" color scheme
+"-------------------------------------------------------------
+syntax enable
+set t_Co=256
+colorscheme molokai
+" set background=dark
+" colorscheme solarized
+if g:colors_name == 'solarized'
+    let g:solarized_termcolors=16
+    let g:solarized_termtrans=0
+    let g:soralized_degrade=0
+    let g:solarized_bold=1
+    let g:solarized_underline=1
+    let g:solarized_italic=1
+    let g:solarized_contrast='normal'
+    let g:solarized_visibiliity='normal'
+endif
+
+
+"-------------------------------------------------------------
 " vim-easy-align
 "-------------------------------------------------------------
 vnoremap <Enter> <Plug>(EasyAlign)
@@ -168,6 +191,14 @@ nnoremap ga <Plug>(EasyAlign))
 "-------------------------------------------------------------
 set laststatus=2
 set noshowmode
+
+
+"-------------------------------------------------------------
+" vim-quickrun
+"-------------------------------------------------------------
+let g:quickrun_config={}
+let g:quickrun_config.c = { 'cmdopt' : '-lm' }
+let g:quickrun_config.cpp = { 'cmdopt' : '-std=c++14' }
 
 
 "-------------------------------------------------------------
