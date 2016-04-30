@@ -5,7 +5,7 @@ set encoding=utf-8
 set fileencodings=utf-8,sjis,iso-2022-jp,eucjp,cp932
 set fileformat=unix
 set fileformats=unix,dos,mac
-" not let to create file for preliminary
+" do not let to create file for preliminary
 set nowritebackup
 set nobackup
 set noswapfile
@@ -27,7 +27,7 @@ set visualbell t_vb=
 set virtualedit=block
 set secure
 set clipboard=unnamed,autoselect
-set timeout timeoutlen=200
+set timeout timeoutlen=1000 ttimeoutlen=50
 
 
 "-------------------------------------------------------------
@@ -44,7 +44,7 @@ cnoremap <C-n> <Down>
 cnoremap <C-f> <Right>
 cnoremap <C-b> <Left>
 
-" be can move the cursol to virtual display line
+" be can move the cursol to virtual screen line
 nnoremap j gj
 nnoremap k gk
 nnoremap gj j
@@ -59,6 +59,8 @@ set smartcase
 set wrapscan
 set hlsearch
 set incsearch
+set magic
+nnoremap / /\v 
 nnoremap <Esc><Esc> :nohlsearch<CR>
 
 " display search key at the center of screen
@@ -66,6 +68,7 @@ nnoremap n nzz
 nnoremap N Nzz
 nnoremap * *zz
 nnoremap # #zz
+
 
 "-------------------------------------------------------------
 " indent
@@ -78,6 +81,7 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
+
 "-------------------------------------------------------------
 " be useful your screen
 "-------------------------------------------------------------
@@ -88,19 +92,43 @@ set showcmd
 set matchpairs+=<:>
 set textwidth=0
 
+
 "-------------------------------------------------------------
 " key bind
 "-------------------------------------------------------------
-noremap  <C-s> <Esc>
-noremap! <C-s> <Esc>
+inoremap jj <Esc>
 nnoremap Y y$
 
-"moving to any window
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-nnoremap <C-w> <C-w>w
+nnoremap : q:i
+nnoremap / q/i
+
+" window and tab-related key mappings
+nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-w>H
+nnoremap sn gt
+nnoremap sp gT
+nnoremap sr <C-w>r
+nnoremap s= <C-w>=
+nnoremap sw <C-w>w
+nnoremap so <C-w>_<C-w>|
+nnoremap sO <C-w>=
+nnoremap sN :<C-u>bn<CR>
+nnoremap sP :<C-u>bp<CR>
+nnoremap st :<C-u>tabnew<CR>
+nnoremap sT :<C-u>Unite tab<CR>
+nnoremap ss :<C-u>sp<CR>
+nnoremap sv :<C-u>vs<CR>
+nnoremap sq :<C-u>q<CR>
+nnoremap sQ :<C-u>bd<CR>
+nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
+nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 
 
 "-------------------------------------------------------------
@@ -245,33 +273,5 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword cha
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+" <CR>: complete by the selected candidate
+inoremap <expr><CR> pumvisible() ? neocomplete#close_popup() : "<CR>"
