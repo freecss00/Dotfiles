@@ -5,7 +5,7 @@ set encoding=utf-8
 set fileencodings=utf-8,sjis,iso-2022-jp,eucjp,cp932
 set fileformat=unix
 set fileformats=unix,dos,mac
-" do not let to create file for preliminary
+" do not let to create preliminary file
 set nowritebackup
 set nobackup
 set noswapfile
@@ -27,7 +27,6 @@ set visualbell t_vb=
 set virtualedit=block
 set secure
 set clipboard=unnamed,autoselect
-set timeout timeoutlen=1000 ttimeoutlen=50
 
 
 "-------------------------------------------------------------
@@ -44,7 +43,7 @@ cnoremap <C-n> <Down>
 cnoremap <C-f> <Right>
 cnoremap <C-b> <Left>
 
-" be can move the cursol to virtual screen line
+" to be able to move about display virtual line
 nnoremap j gj
 nnoremap k gk
 nnoremap gj j
@@ -146,15 +145,7 @@ set runtimepath^=~/.vim/dein/dein.vim
 call dein#begin('~/.cache/dein')
 
 call dein#add('Shougo/dein.vim')
-call dein#add('Shougo/vimproc.vim', {
-    \ 'build':{
-    \    'windows': 'tool\\update-dll-mingw',
-    \    'cygwin': 'make -f make_cygwin.mak',
-    \    'mac': 'make -f make_mac.mak',
-    \    'linux': 'make',
-    \    'unix': 'gmake',
-    \    },
-    \ })
+call dein#add('Shougo/vimproc.vim', {'build':'make'})
 
 call dein#add('Shougo/neocomplete.vim')
 call dein#add('Shougo/neomru.vim')
@@ -166,7 +157,8 @@ call dein#add('Shougo/unite.vim')
 call dein#add('tomtom/tcomment_vim')
 call dein#add('lilydjwg/colorizer')
 call dein#add('itchyny/lightline.vim')
-call dein#add('nathanaelkane/vim-indent-guides')
+call dein#add('vim-scripts/vim-auto-save')
+call dein#add('Yggdroot/indentLine')
 call dein#add('Townk/vim-autoclose')
 call dein#add('tpope/vim-surround')
 call dein#add('thinca/vim-quickrun')
@@ -193,25 +185,8 @@ filetype plugin indent on
 syntax enable
 set t_Co=256
 colorscheme molokai
-" set background=dark
-" colorscheme solarized
-if g:colors_name == 'solarized'
-    let g:solarized_termcolors=16
-    let g:solarized_termtrans=0
-    let g:soralized_degrade=0
-    let g:solarized_bold=1
-    let g:solarized_underline=1
-    let g:solarized_italic=1
-    let g:solarized_contrast='normal'
-    let g:solarized_visibiliity='normal'
-endif
-
-
-"-------------------------------------------------------------
-" vim-easy-align
-"-------------------------------------------------------------
-vnoremap <Enter> <Plug>(EasyAlign)
-nnoremap ga <Plug>(EasyAlign))
+hi Normal       ctermbg=none
+hi CursorLine   ctermbg=236
 
 
 "-------------------------------------------------------------
@@ -222,11 +197,34 @@ set noshowmode
 
 
 "-------------------------------------------------------------
+" indentLine
+"-------------------------------------------------------------
+let g:indentLine_color_term = 239
+let g:indentLine_faster=1
+
+
+"-------------------------------------------------------------
+" vim-auto-save
+"-------------------------------------------------------------
+let g:auto_save=1
+let g:auto_save_no_updatetime=1
+" vim-auto-save disturb other plugins if this variable is enabled. you should disable it.
+let g:auto_save_in_insert_mode=0
+
+
+"-------------------------------------------------------------
 " vim-quickrun
 "-------------------------------------------------------------
 let g:quickrun_config={}
 let g:quickrun_config.c = { 'cmdopt' : '-lm' }
 let g:quickrun_config.cpp = { 'cmdopt' : '-std=c++14' }
+
+
+"-------------------------------------------------------------
+" vim-easy-align
+"-------------------------------------------------------------
+vnoremap <Enter> <Plug>(EasyAlign)
+nnoremap ga <Plug>(EasyAlign))
 
 
 "-------------------------------------------------------------
