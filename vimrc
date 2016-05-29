@@ -26,7 +26,7 @@ set novisualbell
 set visualbell t_vb=
 set virtualedit=block
 set secure
-set clipboard=unnamed,autoselect
+set clipboard=unnamed
 
 
 "-------------------------------------------------------------
@@ -118,16 +118,22 @@ nnoremap s= <C-w>=
 nnoremap sw <C-w>w
 nnoremap so <C-w>_<C-w>|
 nnoremap sO <C-w>=
-nnoremap sN :<C-u>bn<CR>
-nnoremap sP :<C-u>bp<CR>
-nnoremap st :<C-u>tabnew<CR>
-nnoremap sT :<C-u>Unite tab<CR>
-nnoremap ss :<C-u>sp<CR>
-nnoremap sv :<C-u>vs<CR>
-nnoremap sq :<C-u>q<CR>
-nnoremap sQ :<C-u>bd<CR>
-nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
-nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+nnoremap sN :bn<CR>
+nnoremap sP :bp<CR>
+nnoremap st :tabnew<CR>
+nnoremap sT :Unite tab<CR>
+nnoremap ss q:isp 
+nnoremap sv q:ivs 
+nnoremap sq :q<CR>
+nnoremap sQ :bd<CR>
+nnoremap sb :Unite buffer_tab -buffer-name=file<CR>
+nnoremap sB :Unite buffer -buffer-name=file<CR>
+
+
+"-------------------------------------------------------------
+" ctags
+"-------------------------------------------------------------
+:set tag=./tags
 
 
 "-------------------------------------------------------------
@@ -185,8 +191,9 @@ filetype plugin indent on
 syntax enable
 set t_Co=256
 colorscheme molokai
-hi Normal       ctermbg=none
-hi CursorLine   ctermbg=236
+hi Normal     ctermbg=none
+hi Visual     ctermbg=237
+hi CursorLine ctermbg=237
 
 
 "-------------------------------------------------------------
@@ -208,8 +215,29 @@ let g:indentLine_faster=1
 "-------------------------------------------------------------
 let g:auto_save=1
 let g:auto_save_no_updatetime=1
-" vim-auto-save disturb other plugins if this variable is enabled. you should disable it.
+" Vim-auto-save disturb other plugins if this variable is enabled. you should disable it.
 let g:auto_save_in_insert_mode=0
+
+
+"-------------------------------------------------------------
+" vim-surround
+"-------------------------------------------------------------
+function! s:define_surround_mapping(key, mapping)
+    let var_name = 'surround_'.char2nr(a:key)
+    execute 'let b:' . var_name . ' = "' . a:mapping.'"'
+endfunction
+
+let bracket_dict = {
+    \ '(': "(\r)",
+    \ '[': "[\r]",
+    \ '{': "{\r}",
+    \ '<': "<\r>",
+    \ '#': "#{\r}",
+    \ }
+
+for [key, mapping] in items(bracket_dict)
+    call s:define_surround_mapping(key, mapping)
+endfor
 
 
 "-------------------------------------------------------------

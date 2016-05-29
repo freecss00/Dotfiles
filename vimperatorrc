@@ -1,0 +1,74 @@
+"vim: set filetype=vim:
+"-------------------------------------------------------------
+" system
+"-------------------------------------------------------------
+set compelete=ls
+set defsearch=google
+set focuscontent
+set hintchars=hjklasdf
+set hlsearch
+set ignorecase
+set smartcase
+set incsearch
+set visualbell
+set newtab=all
+noremap <C-p> :winopen -private<CR>
+
+
+"-------------------------------------------------------------
+" key bind
+"-------------------------------------------------------------
+noremap h <C-p>
+noremap l <C-n>
+noremap f F
+noremap F f
+noremap s :tabopen google 
+
+
+"-------------------------------------------------------------
+" qmark
+"-------------------------------------------------------------
+:qmark e https://www.evernote.com/Home.action
+:qmark d https://www.dropbox.com/home
+:qmark m https://mail.google.com/
+:qmark s https://www.slideshare.net
+
+
+"-------------------------------------------------------------
+" plugin
+"-------------------------------------------------------------
+source ~/.vimperator/vimppm/plugin/vimppm.js
+
+vimppm "copy.js"
+vimppm "_smooziee.js"
+vimppm "bookmarktoolbar-hint.js"
+vimppm "feedSomeKeys_3"
+vimppm "multi_requester.js"
+
+" copy.js
+javascript <<EOM
+  liberator.globalVariables.copy_templates = [
+    { label: 'title', value: '%TITLE%' },
+    { label: 'plain', value: '%TITLE% %URL%' },
+    { label: 'anchor', value: '<a href="%URL%">%TITLE%</a>' },
+    { label: 'markdown', value: '[%TITLE%](%URL%)' },
+  ];
+EOM
+
+"smooziee.js
+let g:smooziee_scroll_amount = "100"
+let g:smooziee_scroll_interval = "20" 
+js <<EOM
+mappings.addUserMap([modes.NORMAL], ["J"], "Page Down",
+  function() plugins.smooziee.smoothScrollBy(content.innerHeight - 40)
+    );
+mappings.addUserMap([modes.NORMAL], ["K"], "Page Up",
+  function() plugins.smooziee.smoothScrollBy((content.innerHeight - 40)*-1)
+    );
+mappings.addUserMap([modes.NORMAL], ["<C-d>"], "Page Down",
+  function() plugins.smooziee.smoothScrollBy(content.innerHeight - 40)
+    );
+mappings.addUserMap([modes.NORMAL], ["<C-u>"], "Page Up",
+  function() plugins.smooziee.smoothScrollBy((content.innerHeight - 40)*-1)
+    );
+EOM
