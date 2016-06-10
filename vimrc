@@ -96,10 +96,12 @@ set textwidth=0
 " key bind
 "-------------------------------------------------------------
 inoremap jj <Esc>
-nnoremap Y y$
+nmap Y y$
 
-nnoremap : q:i
-nnoremap / q/i
+nmap : ;
+nmap ; :
+nmap : q:i
+nmap / q/i
 
 " window and tab-related key mappings
 nnoremap s <Nop>
@@ -190,10 +192,10 @@ filetype plugin indent on
 "-------------------------------------------------------------
 syntax enable
 set t_Co=256
-colorscheme molokai
-hi Normal     ctermbg=none
-hi Visual     ctermbg=237
-hi CursorLine ctermbg=237
+" colorscheme molokai
+" hi Normal     ctermbg=none
+" hi Visual     ctermbg=237
+" hi CursorLine ctermbg=237
 
 
 "-------------------------------------------------------------
