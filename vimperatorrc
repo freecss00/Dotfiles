@@ -71,4 +71,4 @@ mappings.addUserMap([modes.NORMAL], ["<C-d>"], "Page Down",
 mappings.addUserMap([modes.NORMAL], ["<C-u>"], "Page Up",
   function() plugins.smooziee.smoothScrollBy((content.innerHeight - 40)*-1)
     );
-OM
+EOM
