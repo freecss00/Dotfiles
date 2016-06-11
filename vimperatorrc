@@ -13,7 +13,10 @@ set incsearch
 set visualbell
 set newtab=all
 noremap <C-p> :winopen -private<CR>
-
+" hintchars style
+hi  Hint font-family: Arial; font-size: 18px; font-weight: bold; text-shadow: -3px 0px 1px #006600, 0px -3px 1px #006600, 3px 0px 1px #006600, 0px 3px 1px #006600, -3px -3px 1px #006600, 3px -3px 1px #006600, -3px 3px 1px #006600, 3px 3px 1px #006600; color:#eeeeee;;
+hi HintElem color: gray; background-color: #66ff99;
+hi HintActive color: black; background-color: #00bb00;
 
 "-------------------------------------------------------------
 " key bind
@@ -23,7 +26,12 @@ noremap l <C-n>
 noremap f F
 noremap F f
 noremap s :tabopen google 
+noremap R :source ~/.vimperatorrc<CR>
 
+noremap ; :
+noremap : ;
+noremap <C-a> i<C-a>
+inoremap <C-a> <insert><C-a><insert>
 
 "-------------------------------------------------------------
 " qmark
@@ -31,6 +39,7 @@ noremap s :tabopen google
 :qmark e https://www.evernote.com/Home.action
 :qmark d https://www.dropbox.com/home
 :qmark m https://mail.google.com/
+:qmark h https://mail.google.com/
 :qmark s https://www.slideshare.net
 
 
@@ -39,6 +48,7 @@ noremap s :tabopen google
 "-------------------------------------------------------------
 source ~/.vimperator/vimppm/plugin/vimppm.js
 
+" exec "vimppm install" if these plugins are not installed
 vimppm "copy.js"
 vimppm "_smooziee.js"
 vimppm "bookmarktoolbar-hint.js"
