@@ -1,4 +1,4 @@
-"vim: set filetype=vim:
+"vim: set filetype=vi:
 "-------------------------------------------------------------
 " system
 "-------------------------------------------------------------
@@ -23,8 +23,8 @@ hi HintActive color: black; background-color: #00bb00;
 "-------------------------------------------------------------
 noremap h <C-p>
 noremap l <C-n>
-noremap f F
-noremap F f
+# noremap f F
+# noremap F f
 noremap s :tabopen google 
 noremap R :source ~/.vimperatorrc<CR>
 
