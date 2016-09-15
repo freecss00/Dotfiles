@@ -165,16 +165,43 @@ imap <4-MiddleMouse> <Nop>
 " plugin
 "-------------------------------------------------------------
 :source ~/.vim/mycommand.vim
+if !executable('git')
+    echo "Please install git."
+    finish
+endif
+
 " TODO: add textobj setting
 
 "-------------------------------------------------------------
 " dein.vim
 "-------------------------------------------------------------
+
+let s:dein_dir = expand('~/.cache/dein')
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+
+if !isdirectory(s:dein_repo_dir)
+    echo "Please install dein.vim."
+    function! s:install_dein()
+        if input("Install dein.vim? [y/n] : ") == "y"
+            execute "!git clone git://github.com/Shougo/dein.vim "
+                    \ . s:dein_repo_dir
+            echo "dein has installed. Please restart vim."
+        else
+            echo "Canceled."
+        endif
+    endfunction
+    augroup install-dein
+        autocmd!
+        autocmd VimEnter * call s:install_dein()
+    augroup END
+    finish
+endif
+
 if &compatible
     set nocompatible
 endif
-set runtimepath^=~/.vim/dein/dein.vim
 
+execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
 call dein#begin('~/.cache/dein')
 
 call dein#add('Shougo/dein.vim')
@@ -324,7 +351,7 @@ nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() 
 let g:quickrun_config = {
 \   '_': {
 \        'runner' : 'vimproc',
-\        'runner/vimproc/updatetime' : '60',
+\        'runner/vimproc/updatetime' : '500',
 \        'outputter' : 'error',
 \        'outputter/error/success' : 'buffer',
 \        'outputter/error/error' : 'quickfix',
@@ -336,8 +363,12 @@ let g:quickrun_config = {
 \        'cmdopt' : '-lm',
 \    },
 \
-\   'cpp': {
-\        'cmdopt' : '-std=c++14',
+\   'cpp/g++': {
+\        'cmdopt' : '-std=c++14 -Wall',
+\    },
+\
+\   'cpp/clang++': {
+\        'cmdopt' : '-std=c++14 -Wall',
 \    },
 \}
 
