@@ -1,3 +1,8 @@
+augroup freecss-vimrc "{{{
+    autocmd!
+augroup END
+"}}}
+
 "-------------------------------------------------------------
 " file
 "-------------------------------------------------------------
@@ -170,7 +175,6 @@ if !executable('git')
     finish
 endif
 
-" TODO: add textobj setting
 
 "-------------------------------------------------------------
 " dein.vim
@@ -235,7 +239,31 @@ call dein#add('therubymug/vim-pyte')
 
 " programing language
 call dein#add('justmao945/vim-clang')
+call dein#add('Shougo/neoinclude.vim')
 call dein#add('davidhalter/jedi-vim')
+
+" vim-operator
+call dein#add('kana/vim-operator-user')
+call dein#add('kana/vim-operator-replace')
+call dein#add('rhysd/vim-operator-surround')
+
+" vim-textobj
+call dein#add('kana/vim-textobj-user')
+call dein#add('kana/vim-textobj-line')
+call dein#add('kana/vim-textobj-indent')
+call dein#add('kana/vim-textobj-syntax')
+call dein#add('kana/vim-textobj-function')
+call dein#add('kana/vim-textobj-jabraces')
+call dein#add('kana/vim-textobj-parameter')
+call dein#add('kana/vim-textobj-underscore')
+call dein#add('kana/vim-textobj-url')
+call dein#add('kana/vim-textobj-space')
+call dein#add('kana/vim-textobj-fold')
+call dein#add('kana/vim-textobj-python')
+call dein#add('thinca/vim-textobj-comment')
+call dein#add('thinca/vim-textobj-lastpat')
+call dein#add('thinca/vim-textobj-lastpaste')
+call dein#add('osyo-manga/vim-textobj-multiblock')
 
 " general
 call dein#add('lilydjwg/colorizer')
@@ -244,8 +272,7 @@ call dein#add('itchyny/lightline.vim')
 call dein#add('vim-scripts/vim-auto-save')
 call dein#add('Yggdroot/indentLine')
 call dein#add('kana/vim-smartinput')
-call dein#add('kana/vim-textobj-user')
-call dein#add('tpope/vim-surround')
+" call dein#add('tpope/vim-surround')
 call dein#add('thinca/vim-quickrun')
 call dein#add('junegunn/vim-easy-align',{
     \ 'autoload': {
@@ -311,7 +338,7 @@ let g:auto_save_in_insert_mode=0
 
 
 "-------------------------------------------------------------
-" vim-textobj-user
+" vim-textobj
 "-------------------------------------------------------------
 " TODO: add setting
 
@@ -511,23 +538,43 @@ endif
 "-------------------------------------------------------------
 " neocomplete.vim
 "-------------------------------------------------------------
-"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
+
 let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
+let g:neocomplete#enable_camel_case = 1
+let g:neocomplete#enable_fuzzy_completion = 1
+let g:neocomplete#enable_underbar_completion = 1
+let g:neocomplete#enable_camel_case_completion = 1
+let g:neocomplete#auto_complete_delay = 30
+
+let g:neocomplete#max_list = 25
+let g:neocomplete#auto_completion_start_length = 2
+let g:neocomplete#manual_completion_start_length = 2
 let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
 " Define dictionary.
+" example: 'lang' : 'path to completion dictionary'
 let g:neocomplete#sources#dictionary#dictionaries = {
     \ 'default' : '',
     \ 'vimshell' : $HOME.'/.vimshell_hist',
     \ 'scheme' : $HOME.'/.gosh_completions'
     \ }
+
+let g:neocomplete#enable_auto_delimiter = 1
+let g:neocomplete#max_list = 100
+
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+
+if !exists('g:neocomplete#sources#omni#functions')
+  let g:neocomplete#sources#omni#functions = {}
+endif
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
 
 " Define keyword.
 if !exists('g:neocomplete#keyword_patterns')
@@ -539,18 +586,43 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
+" omni-completion
+let g:marching_enable_neocomplete = 1
+let g:neocomplete#force_omni_input_patterns.cpp =
+    \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+
+let g:neocomplete#sources#omni#input_patterns.python =
+\ '[^. *\t]\.\w*\|\h\w*'
+
+" key mappings "{{{
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
+function! s:my_cr_function() abort "{{{
+  " return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  return neocomplete#smart_close_popup() . "\<CR>"
 endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword cha
+"}}}
+
+inoremap <expr><TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ neocomplete#start_manual_complete()
+function! s:check_back_space() abort "{{{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1] +~ '\s'
+endfunction
+"}}}
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" <CR>: complete by the selected candidate
-inoremap <expr><CR> pumvisible() ? neocomplete#close_popup() : "<CR>"
+"}}}
+
+
+"-------------------------------------------------------------
+" programing language
+"-------------------------------------------------------------
+
+
+"-------------------------------------------------------------
+" python
+"-------------------------------------------------------------
