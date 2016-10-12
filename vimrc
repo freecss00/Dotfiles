@@ -1,11 +1,7 @@
-augroup freecss-vimrc "{{{
-    autocmd!
-augroup END
-"}}}
-
 "-------------------------------------------------------------
 " file
 "-------------------------------------------------------------
+filetype off
 set encoding=utf-8
 set fileencodings=utf-8,sjis,iso-2022-jp,eucjp,cp932
 set fileformat=unix
@@ -77,7 +73,7 @@ set magic
 nnoremap / /\v 
 nnoremap <Esc><Esc> :nohlsearch<CR>
 
-" display searching key's line in the center of the screen
+" display searching key's line in center of the screen
 nnoremap n nzz
 nnoremap N Nzz
 nnoremap * *zz
@@ -119,18 +115,20 @@ inoremap <silent> jj <Esc>
 " revival yanked contents
 " noremap <silent> PP "0p
 nnoremap <silent> Y y$
+vnoremap <silent> < <gv
+vnoremap <silent> > >gv
 
 nmap : ;
 vmap : ;
 nmap ; :
 vmap ; :
-nmap : q:i
-vmap : q:i
-nmap / q/i
-vmap / q/i
+nnoremap : q:a
+vnoremap : q:a
+nnoremap / q/a
+vnoremap / q/a
 
 " operating window and tab
-nnoremap s <Nop>
+" nnoremap s <Nop>
 nnoremap sj <C-w>j
 nnoremap sk <C-w>k
 nnoremap sl <C-w>l
@@ -155,7 +153,7 @@ nnoremap sv :<C-u>vsplit<CR>
 nnoremap sq :<C-u>q<CR>
 nnoremap sQ :<C-u>bd<CR>
 
-" disable mouse input
+" disable middle mouse input
 map <MiddleMouse>   <Nop>
 map <2-MiddleMouse> <Nop>
 map <3-MiddleMouse> <Nop>
@@ -170,10 +168,6 @@ imap <4-MiddleMouse> <Nop>
 " plugin
 "-------------------------------------------------------------
 :source ~/.vim/mycommand.vim
-if !executable('git')
-    echo "Please install git."
-    finish
-endif
 
 
 "-------------------------------------------------------------
@@ -182,6 +176,11 @@ endif
 
 let s:dein_dir = expand('~/.cache/dein')
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+
+if !executable('git')
+    echo "Please install git."
+    finish
+endif
 
 if !isdirectory(s:dein_repo_dir)
     echo "Please install dein.vim."
@@ -224,22 +223,15 @@ call dein#add('ujihisa/unite-colorscheme')
 call dein#add('thinca/vim-ref')
 call dein#add('osyo-manga/unite-quickfix')
 call dein#add('rhysd/quickrun-unite-quickfix-outputter')
-" call dein#add('basyura/unite-converter-file-directory')
 
 " color scheme
 call dein#add('altercation/vim-colors-solarized')
 call dein#add('tomasr/molokai')
 call dein#add('nanotech/jellybeans.vim')
-call dein#add('croaker/mustang-vim')
-call dein#add('jeffreyiacono/vim-colors-wombat')
-call dein#add('vim-scripts/Zenburn')
-call dein#add('mrkn/mrkn256.vim')
-call dein#add('jpo/vim-railscasts-theme')
-call dein#add('therubymug/vim-pyte')
 
 " programing language
-call dein#add('justmao945/vim-clang')
 call dein#add('Shougo/neoinclude.vim')
+call dein#add('justmao945/vim-clang')
 call dein#add('davidhalter/jedi-vim')
 
 " vim-operator
@@ -249,21 +241,23 @@ call dein#add('rhysd/vim-operator-surround')
 
 " vim-textobj
 call dein#add('kana/vim-textobj-user')
+call dein#add('kana/vim-textobj-entire')
 call dein#add('kana/vim-textobj-line')
 call dein#add('kana/vim-textobj-indent')
 call dein#add('kana/vim-textobj-syntax')
 call dein#add('kana/vim-textobj-function')
 call dein#add('kana/vim-textobj-jabraces')
-call dein#add('kana/vim-textobj-parameter')
 call dein#add('kana/vim-textobj-underscore')
-call dein#add('kana/vim-textobj-url')
-call dein#add('kana/vim-textobj-space')
+call dein#add('kana/vim-textobj-lastpat')
 call dein#add('kana/vim-textobj-fold')
-call dein#add('kana/vim-textobj-python')
+call dein#add('bps/vim-textobj-python')
+call dein#add('thinca/vim-textobj-between')
 call dein#add('thinca/vim-textobj-comment')
-call dein#add('thinca/vim-textobj-lastpat')
-call dein#add('thinca/vim-textobj-lastpaste')
 call dein#add('osyo-manga/vim-textobj-multiblock')
+call dein#add('sgur/vim-textobj-parameter')
+call dein#add('saihoooooooo/vim-textobj-space')
+call dein#add('mattn/vim-textobj-url')
+call dein#add('gilligan/textobj-lastpaste')
 
 " general
 call dein#add('lilydjwg/colorizer')
@@ -272,8 +266,13 @@ call dein#add('itchyny/lightline.vim')
 call dein#add('vim-scripts/vim-auto-save')
 call dein#add('Yggdroot/indentLine')
 call dein#add('kana/vim-smartinput')
-" call dein#add('tpope/vim-surround')
 call dein#add('thinca/vim-quickrun')
+call dein#add('osyo-manga/shabadou.vim')
+call dein#add('osyo-manga/vim-watchdogs')
+call dein#add('jceb/vim-hier')
+call dein#add('dannyob/quickfixstatus')
+call dein#add('KazuakiM/vim-qfsigns')
+call dein#add('KazuakiM/vim-qfstatusline')
 call dein#add('junegunn/vim-easy-align',{
     \ 'autoload': {
     \ 'commands': ['EasyAlign'],
@@ -289,6 +288,7 @@ if has('vim_starting') && dein#check_install()
 endif
 
 filetype plugin indent on
+filetype on
 
 
 "-------------------------------------------------------------
@@ -309,60 +309,104 @@ endif
 
 
 "-------------------------------------------------------------
-" lightline.vim
+" vim-hier
 "-------------------------------------------------------------
-set laststatus=2
-set noshowmode
-
+highlight HierWarning cterm=BOLD gui=undercurl guisp=red
+let g:hier_highlight_group_qf = 'HierWarning'
 
 "-------------------------------------------------------------
 " indentLine
 "-------------------------------------------------------------
 let g:indentLine_color_term = 239
-let g:indentLine_faster=1
+let g:indentLine_faster = 1
 
 
 "-------------------------------------------------------------
 " vim-auto-save
 "-------------------------------------------------------------
-let g:auto_save=1
-let g:auto_save_no_updatetime=1
+let g:auto_save = 1
+let g:auto_save_no_updatetime = 1
 " Vim-auto-save conflict with other plugins if this variable is enabled.
-let g:auto_save_in_insert_mode=0
+let g:auto_save_in_insert_mode = 0
 
 
 "-------------------------------------------------------------
 " vim-smartinput
 "-------------------------------------------------------------
 " TODO: add setting
+" http://rhysd.hatenablog.com/entry/20121017/1350444269
+call smartinput#map_to_trigger('i', '<Space>', '<Space>', '<Space>')
+call smartinput#define_rule({
+            \   'at'    : '(\%#)',
+            \   'char'  : '<Space>',
+            \   'input' : '<Space><Space><Left>',
+            \   })
+
+call smartinput#define_rule({
+            \   'at'    : '( \%# )',
+            \   'char'  : '<BS>',
+            \   'input' : '<Del><BS>',
+            \   })
+
+call smartinput#define_rule({
+            \   'at': '\s\+\%#',
+            \   'char': '<CR>',
+            \   'input': "<C-o>:call setline('.', substitute(getline('.'), '\\s\\+$', '', ''))<CR><CR>",
+            \   })
+
+" below setting is for cpp
+call smartinput#define_rule({
+            \   'at'       : '\%(\<struct\>\|\<class\>\|\<enum\>\)\s*\w\+.*\%#',
+            \   'char'     : '{',
+            \   'input'    : '{};<Left><Left>',
+            \   'filetype' : ['cpp'],
+            \   })
+
+call smartinput#map_to_trigger('i', ';', ';', ';')
+call smartinput#define_rule({
+            \   'at'       : ';\%#',
+            \   'char'     : ';',
+            \   'input'    : '<BS>::',
+            \   'filetype' : ['cpp'],
+            \   })
+
+" support input 'boost::'
+call smartinput#define_rule({
+            \   'at'       : '\<b;\%#',
+            \   'char'     : ';',
+            \   'input'    : '<BS>oost::',
+            \   'filetype' : ['cpp'],
+            \   })
+
+" support input 'std::'
+call smartinput#define_rule({
+            \   'at'       : '\<s;\%#',
+            \   'char'     : ';',
+            \   'input'    : '<BS>td::',
+            \   'filetype' : ['cpp'],
+            \   })
 
 
 "-------------------------------------------------------------
 " vim-textobj
 "-------------------------------------------------------------
-" TODO: add setting
+" key mapping list
+" e    :      entire field of buffer
+" l    :      cursol line
+" f    :      inner function
+" _    :      text between under score
+" S    :      multiple spaces
+" b    :      some character as blacket, 
+" a, i :      argument of being function
+" etc..
 
 
 "-------------------------------------------------------------
-" vim-surround
+" vim-operator-surround
 "-------------------------------------------------------------
-function! s:define_surround_mapping(key, mapping)
-    let var_name = 'surround_'.char2nr(a:key)
-    execute 'let b:' . var_name . ' = "' . a:mapping.'"'
-endfunction
-
-let bracket_dict = {
-    \ '(': "(\r)",
-    \ '[': "[\r]",
-    \ '{': "{\r}",
-    \ '<': "<\r>",
-    \ '#': "#{\r}",
-    \ }
-
-for [key, mapping] in items(bracket_dict)
-    call s:define_surround_mapping(key, mapping)
-endfor
-
+nmap <silent>ys <Plug>(operaor-surround-append)
+nmap <silent>ds <Plug>(operaor-surround-delete)
+nmap <silent>cs <Plug>(operaor-surround-replace)
 
 "-------------------------------------------------------------
 " vim-easy-align
@@ -384,6 +428,7 @@ let g:quickrun_config = {
 \        'outputter/error/error' : 'quickfix',
 \        'outputter/buffer/split' : 'rightbelow 8sp',
 \        'outputter/buffer/close_on_empty' : 1,
+\        'hook/close_buffer/enable_empty_data': 1,
 \    },
 \
 \   'c': {
@@ -393,11 +438,76 @@ let g:quickrun_config = {
 \   'cpp/g++': {
 \        'cmdopt' : '-std=c++14 -Wall',
 \    },
-\
-\   'cpp/clang++': {
-\        'cmdopt' : '-std=c++14 -Wall',
-\    },
 \}
+
+
+"-------------------------------------------------------------
+" watchdogs.vim
+"-------------------------------------------------------------
+let g:watchdogs_check_BufWritePost_enable = 1
+let g:watchdogs_check_CursorHold_enable = 1
+
+let g:quickrun_config = {
+\  'watchdogs_checker/_' : {
+\       'runner/vimproc/updatetime' : 40,
+\       'outputter/quickfix/open_cmd' : '',
+\       'hook/u_nya_/enable' : 1,
+\       'hook/echo/enable' : 1,
+\       'hook/echo/output_success' : '> Watchdogs: No Errors Found.',
+\       'hook/echo/output_failure' : '> Watchdogs: Some Errors Found.',
+\       'hook/qfstatuslne_update/enable_exit' : 1,
+\       'hook/qfstatuslne_update/priority_exit' : 4,
+\       'hook/qfsigns_update/enable_exit' : 1,
+\       'hook/qfsigns_update/priority_exit' : 3,
+\   },
+\   
+\   'watchdogs_checker/g++' : {
+\       'cmdopt' : '-Wall'
+\   },
+\
+\   'watchdogs_checker/clang++' : {
+\       'cmdopt' : '-Wall'
+\   },
+\}
+
+" too heavy
+" augroup my_watchdogs
+"     autocmd!
+"     autocmd InsertLeave,BufWritePost,TextChanged *.c,*.h     WatchdogsRun
+"     autocmd InsertLeave,BufWritePost,TextChanged *.cpp,*.hpp WatchdogsRun
+"     autocmd InsertLeave,BufWritePost,TextChanged *.py        WatchdogsRun
+"     autocmd InsertLeave,BufWritePost,TextChanged *.java      WatchdogsRun
+"     autocmd InsertLeave,BufWritePost,TextChanged *.rb        WatchdogsRun
+"     autocmd BufRead *.c,*.h      WatchdogsRun
+"     autocmd BufRead *.cpp,*.hpp  WatchdogsRun
+"     autocmd BufRead *.py         WatchdogsRun
+"     autocmd BufRead *.java       WatchdogsRun
+"     autocmd BufRead *.rb         WatchdogsRun
+" augroup END
+
+call watchdogs#setup(g:quickrun_config)
+
+
+"-------------------------------------------------------------
+" lightline.vim
+"-------------------------------------------------------------
+set laststatus=2
+set noshowmode
+
+" setting for watchdogs.vim
+" let g:lightline = {
+" \   'made_map': {'c': 'NORMAL'},
+" \   'active' : {
+" \       'right': [ [ 'qfstatusline', 'lineinfo' ], [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ] ],
+" \   },
+" \   'component_expand': {
+" \       'qfstatusline': 'qstatusline#Update',
+" \   },
+" \   'component_type':{
+" \      'qfstatusline': 'qfstatusline#Update',
+" \   },
+" \}
+" let g:Qfstatusline#UpdateCmd = function('lightline#update')
 
 
 "-------------------------------------------------------------
@@ -407,6 +517,7 @@ let g:unite_enable_insert = 1
 let g:unite_ignore_source_files = [ "*.git" ]
 let g:unite_source_file_mru_filename_format = ''
 
+" decide tool for 'grep'
 if executable('hw')
   " https://github.com/tkengo/highway
   let g:unite_source_grep_command = 'hw'
@@ -455,12 +566,12 @@ autocmd FileType unite call s:unite_my_settings()
 
 function! s:unite_my_settings() "{{{
     call unite#custom#default_action('directory', 'vimfiler')
-    call unite#custom#default_action('directory', 'narrow')
+    " call unite#custom#default_action('directory', 'narrow')
     nmap <buffer> <Esc> <Plug>(unite_exit)
     imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
-    nnoremap <silent><buffer><expr> s unite#smartmap('s', unite#do_action('split'))
-    nnoremap <silent><buffer><expr> v unite#smartmap('v', unite#do_action('vsplit'))
-    nnoremap <silent><buffer><expr> f unite#smartmap('f', unite#do_action('vimfiler'))
+    nmap <silent><buffer><expr> s unite#smartmap('s', unite#do_action('split'))
+    nmap <silent><buffer><expr> v unite#smartmap('v', unite#do_action('vsplit'))
+    nmap <silent><buffer><expr> f unite#smartmap('f', unite#do_action('vimfiler'))
 endfunction "}}}
 
 " unite-menu "{{{
@@ -509,8 +620,9 @@ endfunction
 "-------------------------------------------------------------
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_safe_mode_by_default = 0
-nnoremap <Leader>e :<C-u>VimFilerBufferDir -split -status -winwidth=35 -toggle -no-quit<CR>
-nnoremap <Leader>v :<C-u>VimFiler<CR>
+" nnoremap <Leader>e :<C-u>VimFilerBufferDir -split -status -winwidth=35 -toggle -no-quit<CR>
+nnoremap <Leader>e :<C-u>VimFilerExplorer -status -winwidth=35 -toggle<CR>
+nnoremap <Leader>v :<C-u>VimFilerBufferDir -status<CR>
 
 autocmd VimEnter * if !argc() | VimFiler | endif
 autocmd BufEnter * if (bufnr('$') == 1 && &filetype ==# 'vimfiler') | q | endif
@@ -574,7 +686,6 @@ endif
 if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
 endif
-let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
 
 " Define keyword.
 if !exists('g:neocomplete#keyword_patterns')
@@ -586,19 +697,18 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" omni-completion
-let g:marching_enable_neocomplete = 1
-let g:neocomplete#force_omni_input_patterns.cpp =
-    \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-
-let g:neocomplete#sources#omni#input_patterns.python =
-\ '[^. *\t]\.\w*\|\h\w*'
+" omni-completion "{{{
+" autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
+" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+" autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd FileType python        setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
+"}}}
 
 " key mappings "{{{
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function() abort "{{{
-  " return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  return neocomplete#smart_close_popup() . "\<CR>"
+  return pumvisible() ? neocomplete#smart_close_popup() : "\<CR>"
 endfunction
 "}}}
 
@@ -612,17 +722,45 @@ function! s:check_back_space() abort "{{{
 endfunction
 "}}}
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-"}}}
+" "}}}
+" "}}}
 
 
 "-------------------------------------------------------------
 " programing language
 "-------------------------------------------------------------
+let g:neocomplete#force_overwrite_completefunc = 1
 
+" cpp "{{{
+autocmd FileType cpp call s:my_cpp_setting()
+function! s:my_cpp_setting()
+    setlocal path+=/usr/local/opt/boost/include
+    setlocal matchpairs+=<:>
+endfunction
+" using 'vim-clang' plugin
+let g:neocomplete#force_omni_input_patterns.c =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+let g:neocomplete#force_omni_input_patterns.cpp =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:clang_auto= 0
+let g:clang_complete_auto = 0
+let g:clang_auto_select = 0
+let g:clang_use_library = 1
 
-"-------------------------------------------------------------
+let g:clang_c_completeopt   = 'menuone'
+let g:clang_cpp_completeopt = 'menuone'
+
+let g:clang_c_options = '-std=c11'
+let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
+"}}}
+
 " python
-"-------------------------------------------------------------
+autocmd FileType python setlocal omnifunc=jedi#completions
+	let g:jedi#completions_enabled = 0
+	let g:jedi#auto_vim_configuration = 0
+	let g:jedi#smart_auto_mappings = 0
+	let g:neocomplete#force_omni_input_patterns.python =
+	\ '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+    " alternative pattern: '\h\w*\|[^. \t]\.\w*'
