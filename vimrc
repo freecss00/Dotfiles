@@ -29,36 +29,13 @@ set virtualedit=block
 set secure
 set mouse=niv
 set clipboard=unnamed
+set backspace=indent,eol,start
+set scrolloff=8
 " keep undo history
 if has('persistent_undo')
 	set undodir=~/.vim/undo
 	set undofile
 endif
-
-
-"-------------------------------------------------------------
-" moving cursol
-"-------------------------------------------------------------
-set backspace=indent,eol,start
-set scrolloff=8
-
-" navigating in each mode
-cnoremap <C-a> <Home>
-cnoremap <C-e> <End>
-cnoremap <C-p> <Up>
-cnoremap <C-n> <Down>
-cnoremap <C-f> <Right>
-cnoremap <C-b> <Left>
-inoremap <C-a> <C-o>_
-inoremap <C-e> <End>
-vnoremap <C-a> <C-o>_
-vnoremap <C-e> <End>
-
-" able to move freely between virtual line
-nnoremap j gj
-nnoremap k gk
-nnoremap gj j
-nnoremap gk k
 
 
 "-------------------------------------------------------------
@@ -93,13 +70,12 @@ set shiftwidth=4
 
 
 "-------------------------------------------------------------
-" displaying useful information
+" screen
 "-------------------------------------------------------------
 set number
 set ruler
 set cursorline
 set showcmd
-set matchpairs+=<:>
 set textwidth=0
 
 
@@ -108,6 +84,24 @@ set textwidth=0
 "-------------------------------------------------------------
 " prefix key
 let mapleader = "\<Space>"
+
+" navigating in each mode
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+cnoremap <C-f> <Right>
+cnoremap <C-b> <Left>
+inoremap <C-a> <C-o>_
+inoremap <C-e> <End>
+vnoremap <C-a> <C-o>_
+vnoremap <C-e> <End>
+
+" able to move freely between virtual line
+" nnoremap j gj
+" nnoremap k gk
+" nnoremap gj j
+" nnoremap gk k
 
 nnoremap <Leader>. :edit $MYVIMRC<CR>
 nnoremap <Leader>, :source $MYVIMRC<CR>
@@ -231,7 +225,7 @@ call dein#add('nanotech/jellybeans.vim')
 
 " programing language
 call dein#add('Shougo/neoinclude.vim')
-call dein#add('justmao945/vim-clang')
+call dein#add('Rip-Rip/clang_complete')
 call dein#add('davidhalter/jedi-vim')
 
 " vim-operator
@@ -449,7 +443,7 @@ let g:watchdogs_check_CursorHold_enable = 1
 
 let g:quickrun_config = {
 \  'watchdogs_checker/_' : {
-\       'runner/vimproc/updatetime' : 40,
+\       'runner/vimproc/updatetime' : 10,
 \       'outputter/quickfix/open_cmd' : '',
 \       'hook/u_nya_/enable' : 1,
 \       'hook/echo/enable' : 1,
@@ -652,6 +646,7 @@ endif
 "-------------------------------------------------------------
 let g:neocomplete#enable_at_startup = 1
 
+let g:neocomplete#enable_auto_select = 1
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#enable_camel_case = 1
 let g:neocomplete#enable_fuzzy_completion = 1
@@ -683,10 +678,6 @@ if !exists('g:neocomplete#sources#omni#functions')
   let g:neocomplete#sources#omni#functions = {}
 endif
 
-if !exists('g:neocomplete#force_omni_input_patterns')
-  let g:neocomplete#force_omni_input_patterns = {}
-endif
-
 " Define keyword.
 if !exists('g:neocomplete#keyword_patterns')
     let g:neocomplete#keyword_patterns = {}
@@ -697,14 +688,6 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" omni-completion "{{{
-" autocmd FileType css           setlocal omnifunc=csscomplete#CompleteCSS
-" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-" autocmd FileType javascript    setlocal omnifunc=javascriptcomplete#CompleteJS
-" autocmd FileType python        setlocal omnifunc=pythoncomplete#Complete
-" autocmd FileType xml           setlocal omnifunc=xmlcomplete#CompleteTags
-"}}}
-
 " key mappings "{{{
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function() abort "{{{
@@ -712,51 +695,73 @@ function! s:my_cr_function() abort "{{{
 endfunction
 "}}}
 
-inoremap <expr><TAB>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ neocomplete#start_manual_complete()
-function! s:check_back_space() abort "{{{
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1] +~ '\s'
-endfunction
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+" inoremap <expr><TAB>
+"     \ pumvisible() ? "\<C-n>" :
+"     \ <SID>check_back_space() ? "\<TAB>" :
+"     \ neocomplete#start_manual_complete()
+" function! s:check_back_space() abort "{{{
+"     let col = col('.') - 1
+"     return !col || getline('.')[col - 1] +~ '\s'
+" endfunction
 "}}}
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" "}}}
-" "}}}
+"}}}
+"}}}
+
+
+"-------------------------------------------------------------
+" neosnippet
+"-------------------------------------------------------------
+" Plugin key-mappings.
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 
 
 "-------------------------------------------------------------
 " programing language
 "-------------------------------------------------------------
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
+endif
 let g:neocomplete#force_overwrite_completefunc = 1
 
-" cpp "{{{
+" c++ "{{{
+let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+
 autocmd FileType cpp call s:my_cpp_setting()
 function! s:my_cpp_setting()
-    setlocal path+=/usr/local/opt/boost/include
+    setlocal path+=/usr/include/c++/4.2.1,/usr/local/opt/boost/include
     setlocal matchpairs+=<:>
 endfunction
-" using 'vim-clang' plugin
-let g:neocomplete#force_omni_input_patterns.c =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
-let g:neocomplete#force_omni_input_patterns.cpp =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-let g:clang_auto= 0
 let g:clang_complete_auto = 0
 let g:clang_auto_select = 0
 let g:clang_use_library = 1
-
-let g:clang_c_completeopt   = 'menuone'
-let g:clang_cpp_completeopt = 'menuone'
-
-let g:clang_c_options = '-std=c11'
-let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
+let g:clang_debug = 1
+if has('mac')
+  let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib'
+endif
+let g:clang_user_options = '-std=c++11'
 "}}}
 
-" python
+" python "{{{
 autocmd FileType python setlocal omnifunc=jedi#completions
 	let g:jedi#completions_enabled = 0
 	let g:jedi#auto_vim_configuration = 0
@@ -764,3 +769,4 @@ autocmd FileType python setlocal omnifunc=jedi#completions
 	let g:neocomplete#force_omni_input_patterns.python =
 	\ '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
     " alternative pattern: '\h\w*\|[^. \t]\.\w*'
+"}}}
