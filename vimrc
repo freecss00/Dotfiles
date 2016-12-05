@@ -264,7 +264,8 @@ call dein#add('saihoooooooo/vim-textobj-space')
 call dein#add('mattn/vim-textobj-url')
 call dein#add('gilligan/textobj-lastpaste')
 
-" general
+" utility
+call dein#add('ryanoasis/vim-devicons')
 call dein#add('lilydjwg/colorizer')
 call dein#add('tomtom/tcomment_vim')
 call dein#add('itchyny/lightline.vim')
@@ -380,7 +381,7 @@ call smartinput#define_rule({
             \   'input': "<C-o>:call setline('.', substitute(getline('.'), '\\s\\+$', '', ''))<CR><CR>",
             \   })
 
-" below setting is for cpp
+" setting below is for cpp
 call smartinput#define_rule({
             \   'at'       : '\%(\<struct\>\|\<class\>\|\<enum\>\)\s*\w\+.*\%#',
             \   'char'     : '{',
@@ -432,9 +433,9 @@ call smartinput#define_rule({
 " vim-operator-surround
 "-------------------------------------------------------------
 "{{{
-nmap <silent>ys <Plug>(operaor-surround-append)
-nmap <silent>ds <Plug>(operaor-surround-delete)
-nmap <silent>cs <Plug>(operaor-surround-replace)
+map <silent>ys <Plug>(operator-surround-append)
+map <silent>ds <Plug>(operator-surround-delete)
+map <silent>cs <Plug>(operator-surround-replace)
 "}}}
 
 "-------------------------------------------------------------
@@ -448,12 +449,13 @@ vmap <Enter> <Plug>(EasyAlign)
 " vim-quickrun
 "-------------------------------------------------------------
 "{{{
-nnoremap <silent> <Leader>r :write<CR>:<C-u>QuickRun -mode n<CR>
+nnoremap  <Leader>r :write<CR>:QuickRun -mode n<CR>
+vnoremap <silent> <Leader>r :QuickRun -mode v<CR>
 nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-c>"
 let g:quickrun_config = {
 \   '_': {
 \        'runner' : 'vimproc',
-\        'runner/vimproc/updatetime' : '500',
+\        'runner/vimproc/updatetime' : '40',
 \        'outputter' : 'error',
 \        'outputter/error/success' : 'buffer',
 \        'outputter/error/error' : 'quickfix',
@@ -467,8 +469,9 @@ let g:quickrun_config = {
 \    },
 \
 \   'cpp/g++': {
-\        'cmdopt' : '-std=c++14 -Wall',
-\    },
+\        'command' : 'g++',
+\        'cmdopt' : '-std=c++14',
+\    }
 \}
 "}}}
 
@@ -481,12 +484,14 @@ let g:watchdogs_check_CursorHold_enable = 1
 
 let g:quickrun_config = {
 \  'watchdogs_checker/_' : {
-\       'runner/vimproc/updatetime' : 10,
+\       'runner/vimproc/updatetime' : 50,
 \       'outputter/quickfix/open_cmd' : '',
 \       'hook/u_nya_/enable' : 1,
 \       'hook/echo/enable' : 1,
 \       'hook/echo/output_success' : '> Watchdogs: No Errors Found.',
 \       'hook/echo/output_failure' : '> Watchdogs: Some Errors Found.',
+\       'hook/back_window/enable' : 1,
+\       'hook/back_window/enable_exit' : 1,
 \       'hook/qfstatuslne_update/enable_exit' : 1,
 \       'hook/qfstatuslne_update/priority_exit' : 4,
 \       'hook/qfsigns_update/enable_exit' : 1,
@@ -528,7 +533,13 @@ set laststatus=2
 set noshowmode
 
 " setting for watchdogs.vim
-" let g:lightline = {
+let g:lightline = {
+\   'component_function': {
+\     'filetype': 'MyFiletype',
+\     'fileformat': 'MyFileformat',
+\   }
+\}
+
 " \   'made_map': {'c': 'NORMAL'},
 " \   'active' : {
 " \       'right': [ [ 'qfstatusline', 'lineinfo' ], [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ] ],
@@ -539,9 +550,8 @@ set noshowmode
 " \   'component_type':{
 " \      'qfstatusline': 'qfstatusline#Update',
 " \   },
-" \}
 " let g:Qfstatusline#UpdateCmd = function('lightline#update')
-"}}}
+" }}}
 
 "-------------------------------------------------------------
 " unite.vim
@@ -653,6 +663,7 @@ endfunction
 "-------------------------------------------------------------
 "{{{
 let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_enable_auto_cd = 0
 let g:vimfiler_safe_mode_by_default = 0
 " nnoremap <Leader>e :<C-u>VimFilerBufferDir -split -status -winwidth=35 -toggle -no-quit<CR>
 nnoremap <Leader>e :<C-u>VimFilerExplorer -status -winwidth=35 -toggle<CR>
@@ -682,22 +693,40 @@ endif
 "}}}
 
 "-------------------------------------------------------------
+" vim-devicons
+"-------------------------------------------------------------
+"{{{
+" change non-ascii font setting to "Droid Sans Mono Nerd Font" if you use iterm..
+" see below for more details
+" https://github.com/ryanoasis/vim-devicons
+set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
+let g:lightline = {
+      \ }
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
+"}}}
+
+"-------------------------------------------------------------
 " neocomplete.vim
 "-------------------------------------------------------------
 "{{{
 let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#max_list = 200
+let g:neocomplete#auto_completion_start_length = 2
+let g:neocomplete#manual_completion_start_length = 2
 
-let g:neocomplete#enable_auto_select = 1
+let g:neocomplete#enable_ignore_case = 1
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#enable_camel_case = 1
 let g:neocomplete#enable_fuzzy_completion = 1
-let g:neocomplete#enable_underbar_completion = 1
-let g:neocomplete#enable_camel_case_completion = 1
 let g:neocomplete#auto_complete_delay = 30
 
-let g:neocomplete#max_list = 25
-let g:neocomplete#auto_completion_start_length = 2
-let g:neocomplete#manual_completion_start_length = 2
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 
 " Define dictionary.
@@ -725,31 +754,35 @@ if !exists('g:neocomplete#keyword_patterns')
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 " key mappings "{{{
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function() abort "{{{
-    return pumvisible() ? neocomplete#smart_close_popup() : "\<CR>"
-endfunction
-"}}}
+inoremap <expr><C-g> neocomplete#undo_completion()
+inoremap <expr><C-l> neocomplete#complete_common_string()
 
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-" inoremap <expr><TAB>
-"     \ pumvisible() ? "\<C-n>" :
-"     \ <SID>check_back_space() ? "\<TAB>" :
-"     \ neocomplete#start_manual_complete()
-" function! s:check_back_space() abort "{{{
-"     let col = col('.') - 1
-"     return !col || getline('.')[col - 1] +~ '\s'
-" endfunction
-"}}}
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><CR> pumvisible() ? neocomplete#close_popup() : "<CR>"
+
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-"}}}
+
+autocmd CmdwinEnter * call s:init_cmdwin()
+autocmd CmdwinLeave * let g:neocomplete#enable_auto_select = 1
+
+function! s:init_cmdwin()
+  let g:neocomplete#enable_auto_select = 0
+
+  nnoremap <buffer><silent> q :<C-u>quit<CR>
+  nnoremap <buffer><silent> <TAB> :<C-u>quit<CR>
+  inoremap <buffer><expr><CR> neocomplete#close_popup()."\<CR>"
+  inoremap <buffer><expr><C-h> col('.') == 1 ?
+        \ "\<ESC>:quit\<CR>" : neocomplete#smart_close_popup()."\<C-h>"
+  inoremap <buffer><expr><BS> col('.') == 1 ?
+        \ "\<ESC>:quit\<CR>" : neocomplete#smart_close_popup()."\<C-h>"
+
+  inoremap <buffer><expr><TAB>  pumvisible() ?
+        \ "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : "\<C-x>\<C-u>\<C-p>"
+endfunction"}}}
 "}}}
 
 "-------------------------------------------------------------
@@ -780,6 +813,9 @@ endif
 " programing language
 "-------------------------------------------------------------
 "{{{
+if !exists('g:neocomplete#delimiter_patterns')
+    let g:neocomplete#delimiter_patterns = {}
+endif
 if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
 endif
@@ -796,15 +832,17 @@ let g:neocomplete#force_overwrite_completefunc = 1
 " autocmd FileType ruby       setlocal omnifunc=rubycomplete#Complete
 " autocmd FileType java       setlocal omnifunc=javacomplete#Complete
 
-" c++ "{{{
+" c, c++ "{{{
 let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
 let g:neocomplete#force_omni_input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:neocomplete#delimiter_patterns.cpp = ['::']
 
 autocmd FileType cpp call s:my_cpp_setting()
 function! s:my_cpp_setting()
     setlocal path+=/usr/include/c++/4.2.1,/usr/local/opt/boost/include
     setlocal matchpairs+=<:>
 endfunction
+
 " clang_complete
 let g:clang_complete_auto = 0
 let g:clang_auto_select = 0
@@ -813,7 +851,7 @@ let g:clang_debug = 1
 if has('mac')
     let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib'
 endif
-let g:clang_user_options = '-std=c++11'
+let g:clang_user_options = '-std=c++14'
 
 " vim-clang
 " let g:clang_c_options = '-std=c11'
@@ -826,7 +864,6 @@ let g:jedi#completions_enabled = 0
 let g:jedi#auto_vim_configuration = 0
 let g:jedi#smart_auto_mappings = 0
 let g:neocomplete#force_omni_input_patterns.python =
-\ '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
-" alternative pattern: '\h\w*\|[^. \t]\.\w*'
+\   '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 "}}}
 "}}}

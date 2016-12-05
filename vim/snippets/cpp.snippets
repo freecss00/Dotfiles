@@ -26,6 +26,8 @@ snippet fori
 
 # Competitive-programing template
 snippet mytemplate
+options word
+abbr my template 
     #include<iostream>
     #include<fstream>
     #include<algorithm>
@@ -41,9 +43,10 @@ snippet mytemplate
     #define RREP(i,m,n) for(int i=(int)(n-1); i>=m; i--)
     #define rep(i,n) REP(i,0,n)
     #define rrep(i,n) RREP(i,0,n)
+    #define each(it,o) for(aut(it, (o).begin()); it != (o).end(); ++it)
     #define fi first
     #define se second
-
+    
     #ifdef _DEBUG
     ifstream ifs("input.txt");
     #define input ifs
@@ -51,19 +54,19 @@ snippet mytemplate
     #define input cin
     #endif
     #define DEBUG(x) cout<<#x<<": "<<x<<endl
-
+    
     using ll = long long;
     using pii = pair<int, int>;
     using vi = vector<int>;
     using vvi = vector<vi>;
     using vl = vector<ll>;
     using vvl = vector<vl>;
-
+    
     const double PI = (1*acos(0.0)); 
-    const ll INF = 1e9;
-    const ll EPS = 1e-9;
-    const ll mod = 1e9 + 7;
-
+    const double INF = 1e9;
+    const double EPS = 1e-9;
+    const double mod = 1e9 + 7;
+    
     int main(){
         ios_base::sync_with_stdio(0);
         cin.tie(0);
