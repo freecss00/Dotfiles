@@ -34,6 +34,8 @@ set clipboard=unnamed
 set foldmethod=marker
 set backspace=indent,eol,start
 set scrolloff=8
+set shortmess=a
+set cmdheight=2
 " keep undo history
 if has('persistent_undo')
 	set undodir=~/.vim/undo
@@ -86,13 +88,6 @@ set textwidth=0
 "}}}
 
 "-------------------------------------------------------------
-" plugin
-"-------------------------------------------------------------
-"{{{
-:source ~/.vim/mycommand.vim
-"}}}
-
-"-------------------------------------------------------------
 " key mapping
 "-------------------------------------------------------------
 "{{{
@@ -134,6 +129,8 @@ nmap ; :
 vmap ; :
 nnoremap : q:a
 vnoremap : q:a
+" nnoremap : :<C-u>Unite command<CR>
+" vnoremap : :<C-u>Unite command<CR>
 nnoremap / q/a
 vnoremap / q/a
 
@@ -172,6 +169,13 @@ imap <MiddleMouse>   <Nop>
 imap <2-MiddleMouse> <Nop>
 imap <3-MiddleMouse> <Nop>
 imap <4-MiddleMouse> <Nop>
+"}}}
+
+"-------------------------------------------------------------
+" plugin
+"-------------------------------------------------------------
+"{{{
+:source ~/.vim/mycommand.vim
 "}}}
 
 "-------------------------------------------------------------
@@ -228,16 +232,23 @@ call dein#add('thinca/vim-ref')
 call dein#add('osyo-manga/unite-quickfix')
 call dein#add('rhysd/quickrun-unite-quickfix-outputter')
 
+" utility
+call dein#add('ryanoasis/vim-devicons')
+call dein#add('lilydjwg/colorizer')
+call dein#add('itchyny/lightline.vim')
+call dein#add('vim-scripts/vim-auto-save')
+call dein#add('Yggdroot/indentLine')
+call dein#add('kana/vim-smartinput')
+call dein#add('kana/vim-submode')
+    
 " color scheme
 call dein#add('altercation/vim-colors-solarized')
 call dein#add('tomasr/molokai')
 call dein#add('nanotech/jellybeans.vim')
+call dein#add('w0ng/vim-hybrid')
+call dein#add('vim-scripts/Wombat')
+call dein#add('cocopon/iceberg.vim')
 
-" programing language
-call dein#add('Shougo/neoinclude.vim')
-call dein#add('Rip-Rip/clang_complete', {'on_ft': ['c', 'cpp']})
-" call dein#add('justmao945/vim-clang', {'on_ft': ['c', 'cpp']})
-call dein#add('davidhalter/jedi-vim', {'on_ft': 'python'})
 
 " vim-operator
 call dein#add('kana/vim-operator-user')
@@ -264,35 +275,32 @@ call dein#add('saihoooooooo/vim-textobj-space')
 call dein#add('mattn/vim-textobj-url')
 call dein#add('gilligan/textobj-lastpaste')
 
-" utility
-call dein#add('ryanoasis/vim-devicons')
-call dein#add('lilydjwg/colorizer')
+" coding
 call dein#add('tomtom/tcomment_vim')
-call dein#add('itchyny/lightline.vim')
-call dein#add('vim-scripts/vim-auto-save')
-call dein#add('Yggdroot/indentLine')
-call dein#add('kana/vim-smartinput')
-call dein#add('kana/vim-submode')
 call dein#add('thinca/vim-quickrun')
 call dein#add('osyo-manga/shabadou.vim')
 call dein#add('osyo-manga/vim-watchdogs')
+call dein#add('majutsushi/tagbar')
 call dein#add('jceb/vim-hier')
 call dein#add('dannyob/quickfixstatus')
 call dein#add('KazuakiM/vim-qfsigns')
 call dein#add('KazuakiM/vim-qfstatusline')
-call dein#add('junegunn/vim-easy-align',{
-    \ 'autoload': {
-    \ 'commands': ['EasyAlign'],
-    \ 'mappings': ['<Plug>(EasyAlign)'],
-    \ }})
-    
+call dein#add('junegunn/vim-easy-align')
+
+" programing language
+call dein#add('Shougo/neoinclude.vim')
+call dein#add('Rip-Rip/clang_complete', {'on_ft': ['c', 'cpp']})
+call dein#add('davidhalter/jedi-vim',   {'on_ft': 'python'})
+call dein#add('lambdalisue/vim-pyenv',  {
+    \'depends': ['davidhalter/jedi-vim'],
+    \'on_ft': 'python'})
 
 call dein#end()
-call dein#save_state()
-
-if has('vim_starting') && dein#check_install()
-    call dein#install()
-endif
+" call dein#save_state()
+"
+" if has('vim_starting') && dein#check_install()
+"     call dein#install()
+" endif
 
 filetype plugin indent on
 filetype on
@@ -317,8 +325,7 @@ call submode#map('bufmove', 'n', '', '-', '<C-w>-')
 "-------------------------------------------------------------
 "{{{
 syntax enable
-colorscheme solarized
-let g:solarized_contrast = 'high'
+colorscheme jellybeans
 if &term =~ "xterm-256color" || "screen-256color"
     set t_Co=256
     set t_Sf=[3%dm
@@ -328,7 +335,7 @@ elseif &term =~ "xterm-color"
     set t_Sf=[3%dm
     set t_Sb=[4%dm
 endif
-"}}}
+" }}}
 
 "-------------------------------------------------------------
 " vim-hier
@@ -446,6 +453,13 @@ vmap <Enter> <Plug>(EasyAlign)
 "}}}
 
 "-------------------------------------------------------------
+" tagbar
+"-------------------------------------------------------------
+"{{{
+nnoremap <silent><Leader>t :TagbarToggle<CR>
+"}}}
+
+"-------------------------------------------------------------
 " vim-quickrun
 "-------------------------------------------------------------
 "{{{
@@ -468,9 +482,9 @@ let g:quickrun_config = {
 \        'cmdopt' : '-lm',
 \    },
 \
-\   'cpp/g++': {
+\   'cpp': {
 \        'command' : 'g++',
-\        'cmdopt' : '-std=c++14',
+\        'cmdopt' : '-std=c++0x -stdlib=libc++',
 \    }
 \}
 "}}}
@@ -479,7 +493,7 @@ let g:quickrun_config = {
 " watchdogs.vim
 "-------------------------------------------------------------
 "{{{
-let g:watchdogs_check_BufWritePost_enable = 1
+let g:watchdogs_check_BufWritePost_enable = 0
 let g:watchdogs_check_CursorHold_enable = 1
 
 let g:quickrun_config = {
@@ -499,28 +513,13 @@ let g:quickrun_config = {
 \   },
 \   
 \   'watchdogs_checker/g++' : {
-\       'cmdopt' : '-Wall'
+\       'cmdopt' : '-std=c++14'
 \   },
 \
 \   'watchdogs_checker/clang++' : {
 \       'cmdopt' : '-Wall'
 \   },
 \}
-
-" too heavy
-" augroup my_watchdogs
-"     autocmd!
-"     autocmd InsertLeave,BufWritePost,TextChanged *.c,*.h     WatchdogsRun
-"     autocmd InsertLeave,BufWritePost,TextChanged *.cpp,*.hpp WatchdogsRun
-"     autocmd InsertLeave,BufWritePost,TextChanged *.py        WatchdogsRun
-"     autocmd InsertLeave,BufWritePost,TextChanged *.java      WatchdogsRun
-"     autocmd InsertLeave,BufWritePost,TextChanged *.rb        WatchdogsRun
-"     autocmd BufRead *.c,*.h      WatchdogsRun
-"     autocmd BufRead *.cpp,*.hpp  WatchdogsRun
-"     autocmd BufRead *.py         WatchdogsRun
-"     autocmd BufRead *.java       WatchdogsRun
-"     autocmd BufRead *.rb         WatchdogsRun
-" augroup END
 
 call watchdogs#setup(g:quickrun_config)
 "}}}
@@ -557,13 +556,28 @@ let g:lightline = {
 " unite.vim
 "-------------------------------------------------------------
 "{{{
+" unite prefix key
+nnoremap [unite] <Nop>
+nmap <Space> [unite]
+
+" unite key mapping "{{{
+nnoremap <silent> [unite]a :<C-u>UniteWithBufferDir -buffer-name=files -start-insert file_rec/async<CR>
+nnoremap <silent> [unite]f :<C-u>Unite file buffer file_mru directory_mru   -buffer-name=files -start-insert<CR>
+nnoremap <silent> [unite]g :<C-u>Unite grep:.                               -buffer-name=search-buffer<CR>
+" nnoremap <silent> [unite]o :<C-u>Unite outline                              -buffer-name=outline -vertical -winwidth=30<CR>
+nnoremap <silent> [unite]p :<C-u>Unite command                              -buffer-name=command<CR>
+nnoremap <silent> [unite]y :<C-u>Unite history/yank                         -buffer-name=yank<CR>
+"}}}
+
 let g:unite_enable_insert = 1
 let g:unite_ignore_source_files = [ "*.git" ]
 let g:unite_source_file_mru_filename_format = ''
+let g:unite_matcher_fuzzy_max_input_length = 30
 
 " decide tool for 'grep'
 if executable('hw')
   " https://github.com/tkengo/highway
+  let g:unite_source_rec_async_command = ['hw', '--follow-link', '--no-group', '--no-color', '-l']
   let g:unite_source_grep_command = 'hw'
   let g:unite_source_grep_default_opts = '--no-group --no-color'
   let g:unite_source_grep_recursive_opt = ''
@@ -576,52 +590,56 @@ elseif executable('ag')
   let g:unite_source_grep_recursive_opt = ''
 endif
 
-" unite prefix key
-nnoremap [unite] <Nop>
-nmap <Space> [unite]
-
-" unite key binding "{{{
-nnoremap <silent> [unite]a :<C-u>Unite file_rec/async:!       -buffer-name=files  -no-split -start-insert<CR>
-nnoremap <silent> [unite]b :<C-u>Unite buffer                 -buffer-name=buffer -no-split -start-insert<CR>
-nnoremap <silent> [unite]f :<C-u>Unite file                   -buffer-name=files  -no-split -start-insert<CR>
-nnoremap <silent> [unite]g :<C-u>Unite grep:.                 -buffer-name=search-buffer<CR>
-nnoremap <silent> [unite]m :<C-u>Unite file_mru directory_mru -buffer-name=mru -no-split -start-insert <CR>
-nnoremap <silent> [unite]o :<C-u>Unite outline                -buffer-name=outline -vertical -winwidth=30<CR>
-nnoremap <silent> [unite]p :<C-u>Unite menu                   -buffer-name=menu -no-split<CR>
-nnoremap <silent> [unite]y :<C-u>Unite history/yank           -buffer-name=yank -no-split<CR>
-"}}}
-
-call unite#custom#profile('action', 'context', {
-\ 'start_insert' : 1
+call unite#custom#profile('default', 'context', {
+\   'start_insert' : 1,
+\   'prompt_direction' : 'top',
+\   'prompt' : '> ',
+\   'candidate_icon' : ' -',
 \})
 
-call unite#custom_max_candidates('file_mru,directory_mru', '25')
+call unite#custom_max_candidates('file_mru,directory_mru', '100')
 call unite#custom#source('line_migemo', 'matchers', 'matcher_migemo')
+call unite#custom#source('command', 'matchers', 'matcher_migemo')
+call unite#custom#default_action('directory', 'cd')
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
+let s:unite_ignore_patterns='\.\(gif\|jpe\?g\|png\|webp\)$'
+call unite#custom#source('file_rec/async', 'ignore_pattern', s:unite_ignore_patterns)
 call unite#custom#source('buffer,file_rec,fire_rec/async,file_rec/git', 'converters', ['converter_uniq_word'])
 call unite#custom#source('file_rec,fire_rec/async,file_rec/git,file_mru', 'converters', ['converter_uniq_word'])
 call unite#custom#source('buffer', 'converters', ['converter_uniq_word', 'converter_worc_abbr'])
 
-autocmd FileType unite nmap <silent><buffer>: :
 autocmd FileType unite call s:unite_my_settings()
-
 function! s:unite_my_settings() "{{{
-    call unite#custom#default_action('directory', 'vimfiler')
-    " call unite#custom#default_action('directory', 'narrow')
+    autocmd FileType unite nnoremap <silent><buffer>: q:a
     nmap <buffer> <Esc> <Plug>(unite_exit)
     imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
-    nmap <silent><buffer><expr> s unite#smartmap('s', unite#do_action('split'))
-    nmap <silent><buffer><expr> v unite#smartmap('v', unite#do_action('vsplit'))
-    nmap <silent><buffer><expr> f unite#smartmap('f', unite#do_action('vimfiler'))
+    imap <buffer> <Tab> <Plug>(unite_select_next_line)
+    nnoremap <silent><buffer><expr> s unite#smart_map('s', unite#do_action('split'))
+    inoremap <silent><buffer><expr> s unite#smart_map('s', unite#do_action('split'))
+    nnoremap <silent><buffer><expr> v unite#smart_map('v', unite#do_action('vsplit'))
+    inoremap <silent><buffer><expr> v unite#smart_map('v', unite#do_action('vsplit'))
+    nnoremap <silent><buffer><expr> f unite#smart_map('f', unite#do_action('vimfiler'))
+    inoremap <silent><buffer><expr> f unite#smart_map('f', unite#do_action('vimfiler'))
 endfunction "}}}
 
-" unite-menu "{{{
+" unite custom "{{{
+" action example "{{{
+" let s:vimfiler_action = {
+" \   'is_selectable' : 0,
+" \}
+" function! s:action_name.func(candidate)
+"     " execute some command.
+" endfunction
+" call unite#custom#action('kind', 'vimfiler_custom', s:vimfiler_action)
+" unlet s:action_name
+"}}}
+
+" unite menu
 if !exists("g:unite_source_menu_menus")
     let g:unite_source_menu_menus = {}
 endif
 
-" unite-shortcut
 let g:unite_source_menu_menus.shortcut = {
 \   "description" : "shortcut"
 \}
@@ -663,21 +681,30 @@ endfunction
 "-------------------------------------------------------------
 "{{{
 let g:vimfiler_as_default_explorer = 1
-let g:vimfiler_enable_auto_cd = 0
+let g:vimfiler_enable_auto_cd = 1
 let g:vimfiler_safe_mode_by_default = 0
-" nnoremap <Leader>e :<C-u>VimFilerBufferDir -split -status -winwidth=35 -toggle -no-quit<CR>
-nnoremap <Leader>e :<C-u>VimFilerExplorer -status -winwidth=35 -toggle<CR>
-nnoremap <Leader>v :<C-u>VimFilerBufferDir -status<CR>
+" let g:vimfiler_ignore_pattern = '^\%(.git|.DS_Store\)'
+nnoremap <Leader>e :<C-u>VimFilerBufferDir -split -status -winwidth=30 -toggle -no-quit<CR>
+nnoremap <Leader>E :<C-u>VimFilerCurrentDir -split -status -winwidth=30 -toggle -no-quit<CR>
+" nnoremap <Leader>e :<C-u>VimFilerExplorer -status -winwidth=30 -toggle<CR>
 
 autocmd VimEnter * if !argc() | VimFiler | endif
-autocmd BufEnter * if (bufnr('$') == 1 && &filetype ==# 'vimfiler') | q | endif
+" autocmd BufEnter * if (winnr('$') == 1 && &filetype ==# 'vimfiler') | q | endif
+autocmd FileType vimfiler nmap <silent><buffer>S <Plug>(vimfiler_toggle_simple_mode)
 autocmd FileType vimfiler nnoremap <silent><buffer>i :<C-u>call UniteFileCurrentDir()<CR>
-autocmd FileType vimfiler nnoremap <silent><buffer>/ :<C-u>call UniteFileCurrentDir()<CR>
-autocmd FileType vimfiler nmap <silent><buffer>: :
+autocmd FileType vimfiler nnoremap <silent><buffer>/ :<C-u>call UniteFileRecCurrentDir()<CR>
+autocmd FileType vimfiler nnoremap <silent><buffer>: q:a
 
 function! UniteFileCurrentDir()
     let path = vimfiler#helper#_get_file_directory()
-    execute ':Unite file directory -start-insert -path='.path
+    execute ':Unite file directory -start-insert -path=' . path
+endfunction
+
+function! UniteFileRecCurrentDir()
+    let path = vimfiler#helper#_get_file_directory()
+    execute ':Unite file_rec/async:' . path
+    " execute ':Unite file_rec/async:' . path . ' -start-insert'
+    echo path
 endfunction
 
 if has('win32') || has('win64')
@@ -699,7 +726,7 @@ endif
 " change non-ascii font setting to "Droid Sans Mono Nerd Font" if you use iterm..
 " see below for more details
 " https://github.com/ryanoasis/vim-devicons
-set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h11
+set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h12
 let g:lightline = {
       \ }
 
@@ -754,7 +781,6 @@ if !exists('g:neocomplete#keyword_patterns')
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-
 " key mappings "{{{
 inoremap <expr><C-g> neocomplete#undo_completion()
 inoremap <expr><C-l> neocomplete#complete_common_string()
@@ -780,8 +806,7 @@ function! s:init_cmdwin()
   inoremap <buffer><expr><BS> col('.') == 1 ?
         \ "\<ESC>:quit\<CR>" : neocomplete#smart_close_popup()."\<C-h>"
 
-  inoremap <buffer><expr><TAB>  pumvisible() ?
-        \ "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : "\<C-x>\<C-u>\<C-p>"
+  inoremap <buffer><expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 endfunction"}}}
 "}}}
 
@@ -790,16 +815,16 @@ endfunction"}}}
 "-------------------------------------------------------------
 "{{{
 let g:neosnippet#snippets_directory = '~/.vim/snippets/'
-" Plugin key-mappings.
+" key mappings.
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
-"imap <expr><TAB>
-" \ pumvisible() ? "\<C-n>" :
-" \ neosnippet#expandable_or_jumpable() ?
-" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+imap <expr><TAB>
+\ pumvisible() ? "\<C-n>" :
+\ neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
@@ -821,16 +846,6 @@ if !exists('g:neocomplete#force_omni_input_patterns')
 endif
 let g:neocomplete#force_overwrite_completefunc = 1
 
-" " omni completion
-" autocmd FileType python     setlocal omnifunc=jedi#completions
-" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-" autocmd FileType html       setlocal omnifunc=htmlcomplete#CompleteTags
-" autocmd FileType css        setlocal omnifunc=csscomplete#CompleteCSS
-" autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
-" autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
-" autocmd FileType c          setlocal omnifunc=ccomplete#Complete
-" autocmd FileType ruby       setlocal omnifunc=rubycomplete#Complete
-" autocmd FileType java       setlocal omnifunc=javacomplete#Complete
 
 " c, c++ "{{{
 let g:neocomplete#force_omni_input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\w*'
@@ -852,17 +867,15 @@ if has('mac')
     let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib'
 endif
 let g:clang_user_options = '-std=c++14'
-
-" vim-clang
-" let g:clang_c_options = '-std=c11'
-" let g:clang_cpp = '-std=c++14'
 "}}}
 
 " python "{{{
 autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#show_call_signatures = 2
+autocmd FileType python setlocal completeopt-=preview
+let g:jedi#smart_auto_mappings = 0
 let g:jedi#completions_enabled = 0
 let g:jedi#auto_vim_configuration = 0
-let g:jedi#smart_auto_mappings = 0
 let g:neocomplete#force_omni_input_patterns.python =
 \   '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 "}}}
