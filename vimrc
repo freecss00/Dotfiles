@@ -34,13 +34,14 @@ set clipboard=unnamed
 set foldmethod=marker
 set backspace=indent,eol,start
 set scrolloff=8
-set shortmess=a
-set cmdheight=2
 " keep undo history
 if has('persistent_undo')
 	set undodir=~/.vim/undo
 	set undofile
 endif
+" disable the "Press Enter or type command to continue" prompt
+set shortmess=a
+set cmdheight=2
 "}}}
 
 "-------------------------------------------------------------
@@ -240,6 +241,8 @@ call dein#add('vim-scripts/vim-auto-save')
 call dein#add('Yggdroot/indentLine')
 call dein#add('kana/vim-smartinput')
 call dein#add('kana/vim-submode')
+call dein#add('tpope/vim-fugitive')
+call dein#add('easymotion/vim-easymotion')
     
 " color scheme
 call dein#add('altercation/vim-colors-solarized')
@@ -248,7 +251,6 @@ call dein#add('nanotech/jellybeans.vim')
 call dein#add('w0ng/vim-hybrid')
 call dein#add('vim-scripts/Wombat')
 call dein#add('cocopon/iceberg.vim')
-
 
 " vim-operator
 call dein#add('kana/vim-operator-user')
@@ -292,8 +294,8 @@ call dein#add('Shougo/neoinclude.vim')
 call dein#add('Rip-Rip/clang_complete', {'on_ft': ['c', 'cpp']})
 call dein#add('davidhalter/jedi-vim',   {'on_ft': 'python'})
 call dein#add('lambdalisue/vim-pyenv',  {
-    \'depends': ['davidhalter/jedi-vim'],
-    \'on_ft': 'python'})
+    \ 'depends': ['jedi-vim'],
+    \ 'on_ft': 'python'})
 
 call dein#end()
 " call dein#save_state()
@@ -303,7 +305,6 @@ call dein#end()
 " endif
 
 filetype plugin indent on
-filetype on
 "}}}
 
 "-------------------------------------------------------------
@@ -562,11 +563,12 @@ nmap <Space> [unite]
 
 " unite key mapping "{{{
 nnoremap <silent> [unite]a :<C-u>UniteWithBufferDir -buffer-name=files -start-insert file_rec/async<CR>
-nnoremap <silent> [unite]f :<C-u>Unite file buffer file_mru directory_mru   -buffer-name=files -start-insert<CR>
-nnoremap <silent> [unite]g :<C-u>Unite grep:.                               -buffer-name=search-buffer<CR>
-" nnoremap <silent> [unite]o :<C-u>Unite outline                              -buffer-name=outline -vertical -winwidth=30<CR>
-nnoremap <silent> [unite]p :<C-u>Unite command                              -buffer-name=command<CR>
-nnoremap <silent> [unite]y :<C-u>Unite history/yank                         -buffer-name=yank<CR>
+nnoremap <silent> [unite]f :<C-u>Unite file  file_mru directory_mru     -buffer-name=files -start-insert<CR>
+nnoremap <silent> [unite]b :<C-u>Unite buffer                           -buffer-name=files -start-insert<CR>
+nnoremap <silent> [unite]g :<C-u>Unite grep:.                           -buffer-name=search-buffer<CR>
+nnoremap <silent> [unite]p :<C-u>Unite command                          -buffer-name=command<CR>
+nnoremap <silent> [unite]y :<C-u>Unite history/yank                     -buffer-name=yank<CR>
+" nnoremap <silent> [unite]o :<C-u>Unite outline                          -buffer-name=outline -vertical -winwidth=30<CR>
 "}}}
 
 let g:unite_enable_insert = 1
@@ -598,8 +600,6 @@ call unite#custom#profile('default', 'context', {
 \})
 
 call unite#custom_max_candidates('file_mru,directory_mru', '100')
-call unite#custom#source('line_migemo', 'matchers', 'matcher_migemo')
-call unite#custom#source('command', 'matchers', 'matcher_migemo')
 call unite#custom#default_action('directory', 'cd')
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
@@ -607,7 +607,8 @@ let s:unite_ignore_patterns='\.\(gif\|jpe\?g\|png\|webp\)$'
 call unite#custom#source('file_rec/async', 'ignore_pattern', s:unite_ignore_patterns)
 call unite#custom#source('buffer,file_rec,fire_rec/async,file_rec/git', 'converters', ['converter_uniq_word'])
 call unite#custom#source('file_rec,fire_rec/async,file_rec/git,file_mru', 'converters', ['converter_uniq_word'])
-call unite#custom#source('buffer', 'converters', ['converter_uniq_word', 'converter_worc_abbr'])
+call unite#custom#source('buffer', 'converters', ['converter_uniq_word', 'converter_word_abbr'])
+call unite#custom#source('file_mru', 'converters', 'converter_file_directory')
 
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings() "{{{
