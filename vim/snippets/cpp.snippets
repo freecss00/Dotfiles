@@ -53,27 +53,30 @@ abbr my template
     #define reach(it,o) for(aut(it,(o).rbegin()); it!=(o).rend(); ++it)
     #define fi first
     #define se second
-    #define dump(x) cerr << " [L" << __LINE__ << "] " << #x << " = " << (x) << endl;
+    #define debug(...) cerr<<"[L"<<__LINE__<<"] "; _debug(__VA_ARGS__);
     
-    template<typename T>string join(vector<T>&v, string del=", ")
+    template<typename T>string join(const vector<T>&v, string del=", ")
     {stringstream s;rep(i,v.size())s<<del<<v[i];return s.str().substr(del.size());}
     template<typename T1, typename T2> ostream& operator<<(ostream& o, const pair<T1, T2>& p)
     {return o<<"("<<p.first<<", "<<p.second<<")";}
-    template<typename T>ostream& operator<<(ostream& o, vector<T>&v)
+    template<typename T>ostream& operator<<(ostream& o, const vector<T>&v)
     {if(v.size())o<<"["<<join(v)<<"]";return o;}
-    template<typename T>ostream& operator<<(ostream& o, vector<vector<T> >&vv)
+    template<typename T>ostream& operator<<(ostream& o, const vector<vector<T> >&vv)
     {int l=vv.size();if(l){rep(i,l){o<<(i==0?"[ ":",\n  ")<<vv[i]<<(i==l-1?" ]":"");}}return o;}
     template<typename T>ostream& operator<<(ostream& o, const set<T>& st)
     {vector<T> v(st.begin(),st.end());o<<"{ "<<join(v)<<" }";return o;}
     template<typename T1, typename T2>ostream& operator<<(ostream& o, const map<T1, T2>& m)
     {each(p,m){o<<(p==m.begin()?"{ ":",\n  ")<<*p<<(p==--m.end()?" }":"");}return o;}
+    inline void _debug(){cerr<<endl;}
+    template<class First, class... Rest>
+    void _debug(const First& first, const Rest&... rest){cerr<<first<<" ";_debug(rest...);}
     
-    using ll = long long;
-    using pii = pair<int, int>;
-    using vi = vector<int>;
-    using vvi = vector<vi>;
-    using vl = vector<ll>;
-    using vvl = vector<vl>;
+    typedef long long ll;
+    typedef pair<int, int> pii;
+    typedef vector<int> vi;
+    typedef vector<vi> vvi;
+    typedef vector<ll> vl;
+    typedef vector<vl> vvl;
     
     const double PI = (1*acos(0.0)); 
     const double INF = 0x3f3f3f3f;
