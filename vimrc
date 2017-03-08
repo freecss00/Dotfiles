@@ -42,6 +42,7 @@ endif
 " disable the "Press Enter or type command to continue" prompt
 set shortmess=a
 set cmdheight=2
+let g:vim_indent_cont = 0
 "}}}
 
 "-------------------------------------------------------------
@@ -469,24 +470,33 @@ vnoremap <silent> <Leader>r :QuickRun -mode v<CR>
 nnoremap <expr><silent> <C-c> quickrun#is_running() ? quickrun#sweep_sessions() : "\<C-c>"
 let g:quickrun_config = {
 \   '_': {
-\        'runner' : 'vimproc',
-\        'runner/vimproc/updatetime' : '40',
-\        'outputter' : 'error',
-\        'outputter/error/success' : 'buffer',
-\        'outputter/error/error' : 'quickfix',
-\        'outputter/buffer/split' : 'rightbelow 8sp',
-\        'outputter/buffer/close_on_empty' : 1,
-\        'hook/close_buffer/enable_empty_data': 1,
+\       'runner' : 'vimproc',
+\       'runner/vimproc/updatetime' : '40',
+\       'outputter' : 'error',
+\       'outputter/error/success' : 'buffer',
+\       'outputter/error/error' : 'quickfix',
+\       'outputter/buffer/split' : 'rightbelow 8sp',
+\       'outputter/buffer/close_on_empty' : 1,
+\       'hook/close_buffer/enable_empty_data': 1,
 \    },
 \
 \   'c': {
-\        'cmdopt' : '-lm',
+\       'cmdopt' : '-lm',
 \    },
 \
 \   'cpp': {
-\        'command' : 'g++',
-\        'cmdopt' : '-std=c++0x -stdlib=libc++',
-\    }
+\       'type' : 'cpp/g++',
+\    },
+\
+\   'cpp/g++': {
+\       'command' : 'g++',
+\       'cmdopt' : '-std=c++14',
+\   },
+\
+\   'cpp/clang': {
+\       'command' : 'clang++',
+\       'cmdopt' : '-std=c++14 -stdlib=libc++',
+\   }
 \}
 "}}}
 
@@ -494,7 +504,6 @@ let g:quickrun_config = {
 " watchdogs.vim
 "-------------------------------------------------------------
 "{{{
-let g:watchdogs_check_BufWritePost_enable = 0
 let g:watchdogs_check_CursorHold_enable = 1
 
 let g:quickrun_config = {
@@ -526,20 +535,95 @@ call watchdogs#setup(g:quickrun_config)
 "}}}
 
 "-------------------------------------------------------------
+" vim-devicons
+"-------------------------------------------------------------
+"{{{
+" change non-ascii font setting to "Droid Sans Mono Nerd Font" if you use iterm..
+" see below for more details
+" https://github.com/ryanoasis/vim-devicons
+set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h12
+
+function! DevIconFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+
+function! DevIconFileformat()
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
+"}}}
+
+"-------------------------------------------------------------
 " lightline.vim
 "-------------------------------------------------------------
 "{{{
 set laststatus=2
 set noshowmode
 
-" setting for watchdogs.vim
 let g:lightline = {
+\   'colorscheme': 'wombat',
+\   'mode_map': {'c': 'NORMAL'},
+\   'active': {
+\      'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
+\   },
+\   'tab': {
+\       
+\   },
 \   'component_function': {
-\     'filetype': 'MyFiletype',
-\     'fileformat': 'MyFileformat',
+\       'modified': 'LightlineModified',
+\       'readonly': 'LightlineReadonly',
+\       'fugitive': 'LightlineFugitive',
+\       'filename': 'LightlineFilename',
+\       'filetype': 'DevIconFiletype',
+\       'fileformat': 'DevIconFileformat',
+\       'fileencoding': 'LightlineFileencoding',
+\       'mode': 'LightlineMode'
 \   }
-\}
+\ }
 
+function! LightlineModified()
+  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! LightlineReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? 'x' : ''
+endfunction
+
+function! LightlineFilename()
+  return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+endfunction
+
+function! LightlineFugitive()
+  if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
+    return fugitive#head()
+  else
+    return ''
+  endif
+endfunction
+
+function! LightlineFileencoding()
+  return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+endfunction
+
+" function! LightlineMode()
+"   return winwidth(0) > 60 ? lightline#mode() : ''
+" endfunction
+" \}
+function! LightlineMode()
+  return  &ft == 'unite' ? 'Unite' :
+        \ &ft == 'vimfiler' ? 'VimFiler' :
+        \ &ft == 'vimshell' ? 'VimShell' :
+        \ winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+" \   'component_function': {
+" \     'filetype': 'MyFiletype',
+" \     'fileformat': 'MyFileformat',
+" \   }
 " \   'made_map': {'c': 'NORMAL'},
 " \   'active' : {
 " \       'right': [ [ 'qfstatusline', 'lineinfo' ], [ 'percent' ], [ 'fileformat', 'fileencoding', 'filetype' ] ],
@@ -718,26 +802,6 @@ else
     let g:vimfiler_readonly_file_icon = '✗'
     let g:vimfiler_marked_file_icon = '✓'
 endif
-"}}}
-
-"-------------------------------------------------------------
-" vim-devicons
-"-------------------------------------------------------------
-"{{{
-" change non-ascii font setting to "Droid Sans Mono Nerd Font" if you use iterm..
-" see below for more details
-" https://github.com/ryanoasis/vim-devicons
-set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Plus\ Nerd\ File\ Types:h12
-let g:lightline = {
-      \ }
-
-function! MyFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
-endfunction
-
-function! MyFileformat()
-  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
-endfunction
 "}}}
 
 "-------------------------------------------------------------
