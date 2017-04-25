@@ -53,16 +53,16 @@ abbr my template
     #define reach(it,o) for(aut(it,(o).rbegin()); it!=(o).rend(); ++it)
     #define fi first
     #define se second
-    #define debug(...) cerr<<"[L"<<__LINE__<<"] "; _debug(__VA_ARGS__);
+    #define debug(...) {cerr<<"[L"<<__LINE__<<"] "; _debug(__VA_ARGS__);}
     
-    template<typename T>string join(const vector<T>&v, string del=", ")
-    {stringstream s;rep(i,v.size())s<<del<<v[i];return s.str().substr(del.size());}
     template<typename T1, typename T2> ostream& operator<<(ostream& o, const pair<T1, T2>& p)
     {return o<<"("<<p.first<<", "<<p.second<<")";}
+    template<typename T>string join(const vector<T>&v, string del=", ")
+    {stringstream s;rep(i,v.size())s<<del<<v[i];return s.str().substr(del.size());}
     template<typename T>ostream& operator<<(ostream& o, const vector<T>&v)
     {if(v.size())o<<"["<<join(v)<<"]";return o;}
     template<typename T>ostream& operator<<(ostream& o, const vector<vector<T> >&vv)
-    {int l=vv.size();if(l){rep(i,l){o<<(i==0?"[ ":",\n  ")<<vv[i]<<(i==l-1?" ]":"");}}return o;}
+    {int l=vv.size();if(l){o<<endl;rep(i,l){o<<(i==0?"[ ":",\n  ")<<vv[i]<<(i==l-1?" ]":"");}}return o;}
     template<typename T>ostream& operator<<(ostream& o, const set<T>& st)
     {vector<T> v(st.begin(),st.end());o<<"{ "<<join(v)<<" }";return o;}
     template<typename T1, typename T2>ostream& operator<<(ostream& o, const map<T1, T2>& m)
