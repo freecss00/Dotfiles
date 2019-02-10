@@ -1,0 +1,78 @@
+" Setting
+set surround
+set clipboard=unnamed
+set gdefault
+set hlsearch
+set history
+set ignorecase
+set number
+set scrolloff=8
+set showmode
+set smartcase
+set visualbell
+set wrapscan
+
+" Key mapping
+nnoremap j gj
+nnoremap k gk
+nnoremap gj j
+nnoremap gk k
+
+inoremap <C-a> <C-o>_
+inoremap <C-e> <End>
+inoremap <C-h> <Left>
+inoremap <C-l> <Right>
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-n> <Down>
+cnoremap <C-p> <Up>
+cnoremap <C-f> <Right>
+cnoremap <C-b> <Left>
+
+nnoremap : ;
+vnoremap : ;
+nnoremap ; :
+vnoremap ; :
+
+nunmap s
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+nnoremap <C-n> gT
+nnoremap <C-p> gt
+nnoremap ss :action MoveTabDown<CR>
+nnoremap sv :action MoveTabRight<CR>
+nnoremap sq :action VimWindowClose<CR>
+nnoremap S :action MoveEditorToOppositeTabGroup<CR>
+
+inoremap jj <Esc>
+nnoremap <silent> Y y$
+vnoremap <silent> < <gv
+vnoremap <silent> > >gv
+nnoremap <Space>, :source ~/.ideavimrc<CR>
+
+" IDE Actions
+inoremap <C-o> <C-o>:action CodeCompletion<CR>
+nnoremap / :action Find<CR>
+nnoremap n :action FindNext<CR>
+nnoremap N :action FindPrevious<CR>
+nnoremap R :action RenameElement<CR>
+nnoremap u :action $Undo<CR>
+nnoremap <C-r> :action $Redo<CR>
+nnoremap <C--><C--> :action CommentByLineComment<CR>
+vnoremap <C--><C--> :action CommentByLineComment<CR>
+nnoremap <Space><Space> :action GotoAction<CR>
+nnoremap <Space>b :action CompileProject<CR>
+nnoremap <Space>f :action GotoFile<CR>
+nnoremap <Space>h :action QuickJavaDoc<CR>
+nnoremap <Space>i :action ImplementMethods<CR>
+nnoremap <Space>j :action ShowIntentionActions<CR>
+nnoremap <Space>k :action InsertLiveTemplate<CR>
+nnoremap <Space>l :action ReformatCode<CR>:action OptimizeImports<CR>
+nnoremap <Space>o :action OverrideMethods<CR>
+nnoremap <Space>r :action RunClass<CR>
+nnoremap <Space>s :action SearchEverywhere<CR>
+nnoremap <Space>t :action FileStructurePopup<CR>

@@ -65,3 +65,12 @@ cscope.files
 cscope.out
 cscope.in.out
 cscope.po.out
+
+#-------------------------------------------------------------
+# Misc
+#-------------------------------------------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
