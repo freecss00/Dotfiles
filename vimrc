@@ -249,22 +249,20 @@ if !executable('git')
     finish
 endif
 
-if !isdirectory(s:dein_repo_dir)
-    echo "Please install dein.vim."
-    function! s:install_dein()
-        if input("Install dein.vim? [y/n] : ") == "y"
-            execute "!git clone git://github.com/Shougo/dein.vim "
-                    \ . s:dein_repo_dir
-            echo "dein has installed. Please restart vim."
-        else
-            echo "Canceled."
-        endif
-    endfunction
-    augroup install-dein
-        autocmd!
-        autocmd VimEnter * call s:install_dein()
-    augroup END
-    finish
+let $CACHE = expand('~/.cache')
+if !($CACHE->isdirectory())
+  call mkdir($CACHE, 'p')
+endif
+if &runtimepath !~# '/dein.vim'
+  let s:dir = 'dein.vim'->fnamemodify(':p')
+  if !(s:dir->isdirectory())
+    let s:dir = $CACHE .. '/dein/repos/github.com/Shougo/dein.vim'
+    if !(s:dir->isdirectory())
+      execute '!git clone https://github.com/Shougo/dein.vim' s:dir
+    endif
+  endif
+  execute 'set runtimepath^='
+        \ .. s:dir->fnamemodify(':p')->substitute('[/\\]$', '', '')
 endif
 
 if &compatible
