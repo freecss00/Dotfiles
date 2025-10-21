@@ -1,0 +1,192 @@
+// Place your key bindings in this file to overwrite the defaults
+[
+    // window navigation
+    {
+        "key": "tab",
+        "command": "selectNextQuickFix",
+        "when": "editorFocus && quickFixWidgetVisible"
+    },
+    {
+        "key": "shift+tab",
+        "command": "selectPrevQuickFix",
+        "when": "editorFocus && quickFixWidgetVisible"
+    },
+    {
+        "key": "ctrl+n",
+        "command": "selectNextQuickFix",
+        "when": "editorFocus && quickFixWidgetVisible"
+    },
+    {
+        "key": "ctrl+p",
+        "command": "selectPrevQuickFix",
+        "when": "editorFocus && quickFixWidgetVisible"
+    },
+    {
+        "key": "ctrl+n",
+        "command": "selectNextSuggestion",
+        "when": "editorFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+p",
+        "command": "selectPrevSuggestion",
+        "when": "editorFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+    },
+    {
+        "key": "cmd+b",
+        "command": "workbench.action.toggleSidebarVisibility",
+    },
+    {
+        "key": "cmd+o",
+        "command": "workbench.action.quickOpen",
+    },
+    {
+        "key": "ctrl+shift+h",
+        "command": "workbench.action.focusSideBar",
+        "when": "sideBarVisible && editorFocus"
+    },
+    {
+        "key": "ctrl+shift+l",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "sideBarVisible && sideBarFocus"
+    },
+    {
+        "key": "ctrl+shift+j",
+        "command": "workbench.action.terminal.focus",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+k",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "terminalFocus"
+    },
+    // Navigate between chat window and editor window
+    {
+        "key": "shift+cmd+i",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "inChatInput"
+    },
+    // rich editor actions
+    {
+        "key": "cmd+shift+r",
+        "command": "code-runner.run",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+f",
+        "command": "editor.action.formatDocument",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+p",
+        "command": "workbench.action.showAllSymbols",
+    },
+    {
+        "key": "ctrl+- ctrl+-",
+        "command": "editor.action.commentLine",
+        "when": "vim.mode != 'Normal' && editorTextFocus && !editorReadOnly"
+    },
+
+    // Vim keybindings
+    // In normal mode.
+    {
+        "key": "ctrl+- ctrl+-",
+        "command": "editor.action.commentLine",
+        "when": "vim.mode == 'Normal' && editorTextFocus && !editorReadOnly"
+    },
+    {
+        "key": "shift+r",
+        "command": "editor.action.rename",
+        "when": "vim.mode == 'Normal' && editorHasRenameProvider && editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+p",
+        "command": "editor.action.showHover",
+        "when": "vim.mode == 'Normal' && editorTextFocus && vim.active && !inDebugRepl && !quickFixWidgetVisible && !suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+g",
+        "command": "editor.action.goToDeclaration",
+        "when": "vim.mode == 'Normal' && editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
+    },
+    {
+        "key": "cmd+r",
+        "command": "editor.action.referenceSearch.trigger",
+    },
+    // In insert mode.
+    {
+        "key": "ctrl+a",
+        "command": "cursorHome",
+        "when": "editorTextFocus && vim.active && !inDebugRepl && vim.mode == 'Insert'"
+    },
+    {
+        "key": "ctrl+e",
+        "command": "cursorEnd",
+        "when": "editorTextFocus && vim.active && !inDebugRepl && vim.mode == 'Insert'"
+    },
+    {
+        "key": "ctrl+h",
+        "command": "cursorLeft",
+        "when": "editorTextFocus && vim.active && !inDebugRepl && vim.mode == 'Insert'"
+    },
+    {
+        "key": "ctrl+l",
+        "command": "cursorRight",
+        "when": "editorTextFocus && vim.active && !inDebugRepl && vim.mode == 'Insert'"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "cursorUp",
+        "when": "editorTextFocus && vim.active && !inDebugRepl && vim.mode == 'Insert' && !suggestWidgetMultipleSuggestions && !suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+j",
+        "command": "cursorDown",
+        "when": "editorTextFocus && vim.active && !inDebugRepl && vim.mode == 'Insert' && !suggestWidgetMultipleSuggestions && !suggestWidgetVisible"
+    },
+    {
+        "key": "ctrl+p",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus && vim.active && !inDebugRepl && vim.mode == 'Insert' && !quickFixWidgetVisible && !suggestWidgetVisible"
+    },
+    // In explorer
+    {
+        "key": "ctrl+f",
+        "command": "list.focusPageDown",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "ctrl+b",
+        "command": "list.focusPageUp",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "x",
+        "command": "filesExplorer.cut",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "yy",
+        "command": "filesExplorer.copy",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "p",
+        "command": "filesExplorer.paste",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "shift+n",
+        "command": "explorer.newFile",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "shift+k",
+        "command": "explorer.newFolder",
+        "when": "listFocus && !inputFocus"
+    },
+    {
+        "key": "d",
+        "command": "deleteFile",
+        "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceReadonly && !inputFocus"
+    },
+]
