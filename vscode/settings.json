@@ -3,8 +3,10 @@
     "editor.fontSize": 11,
     "editor.tabCompletion": "off",
     "editor.minimap.enabled": false,
+    "editor.smoothScrolling": true,
     "files.trimTrailingWhitespace": true,
     "git.path": "/usr/local/bin/git",
+    "editor.cursorSurroundingLines": 5,
 
     // vscode vim
     "keyboard.dispatch": "keyCode",
@@ -33,7 +35,7 @@
     ],
     "vim.normalModeKeyBindingsNonRecursive": [
         {
-            "before": [ "space", "space" ],
+            "before": [ "space", "q" ],
             "commands": [ "editor.action.quickFix" ]
         },
         {
@@ -41,11 +43,11 @@
             "commands": [ "editor.action.goToDeclaration" ]
         },
         {
-            "before": [ "space", "f" ],
+            "before": [ "ctrl+]" ],
             "commands": [ "workbench.action.navigateForward" ]
         },
         {
-            "before": [ "space", "b" ],
+            "before": [ "ctrl+[" ],
             "commands": [ "workbench.action.navigateBack" ]
         },
         {
@@ -124,7 +126,7 @@
     // code-runner
     "code-runner.runInTerminal": true,
     "code-runner.executorMap": {
-        "cpp": "cd $dir && g++-9 -std=c++14 -I/Users/freecss/local/competitive/lib -D_MY_DEBUG -D_GLIBCXX_DEBUG $fileName && ./a.out"
+        "cpp": "cd $dir && g++-9 -std=c++14 -I$HOME/local/competitive/lib -D_MY_DEBUG -D_GLIBCXX_DEBUG $fileName && ./a.out"
     },
 
     // python
@@ -133,7 +135,7 @@
     "window.zoomLevel": 0,
 
     // golang
-    "go.gopath": "/Users/freecss/go",
+    "go.gopath": "${env:HOME}/go",
     "go.useLanguageServer": true,
     "go.languageServerFlags": [
         "-rpc.trace"
@@ -192,7 +194,7 @@
     },
     "workbench.colorTheme": "Noctis Minimus",
     "vscode-office.editorTheme": "Auto",
-    "vsnotes.defaultNotePath": "/Users/freecss/local/notes",
+    "vsnotes.defaultNotePath": "${env:HOME}/local/notes",
     "github.copilot.nextEditSuggestions.enabled": true,
     "mssql.connectionGroups": [
         {
@@ -204,4 +206,14 @@
     "accessibility.voice.keywordActivation": "chatInView",
     "accessibility.voice.speechLanguage": "ja-JP",
     "docker.extension.enableComposeLanguageServer": false,
+    "workbench.iconTheme": "material-icon-theme",
+    "gitlens.ai.model": "vscode",
+    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+    "git.autofetch": true,
+    "mcpServers": {
+        "serena": {
+            "command": "uvx",
+            "args": ["--from", "git+https://github.com/oraios/serena", "serena-mcp-server"]
+        }
+    }
 }

@@ -1,6 +1,6 @@
 // Place your key bindings in this file to overwrite the defaults
 [
-    // window navigation
+    // basic shortcut
     {
         "key": "tab",
         "command": "selectNextQuickFix",
@@ -31,41 +31,67 @@
         "command": "selectPrevSuggestion",
         "when": "editorFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
     },
+    // toggle left sidebar
     {
         "key": "cmd+b",
         "command": "workbench.action.toggleSidebarVisibility",
     },
+    // toggle chat sidebar
+    // {
+    //     "key": "cmd+e",
+    //     // for vscode
+    //     // "command": "workbench.action.chat.toggle",
+    //     // for cursor
+    //     "command": "workbench.action.toggleAuxiliaryBar",
+    // },
     {
-        "key": "cmd+o",
+        "key": "ctrl+o",
         "command": "workbench.action.quickOpen",
     },
+    // ***
+    // navigating shortcut between window
+    // ***
+    // go to the sidebar
     {
         "key": "ctrl+shift+h",
         "command": "workbench.action.focusSideBar",
-        "when": "sideBarVisible && editorFocus"
+        "when": "editorFocus"
     },
+    // go back to the editor from sidebar
     {
         "key": "ctrl+shift+l",
         "command": "workbench.action.focusActiveEditorGroup",
-        "when": "sideBarVisible && sideBarFocus"
+        // sideBarFocusがcursorで効かないので削除
+        // "when": "sideBarVisible && sideBarFocus"
+        "when": "!editorFocus"
     },
+    // go to the terminal window
     {
         "key": "ctrl+shift+j",
         "command": "workbench.action.terminal.focus",
         "when": "!terminalFocus"
     },
+    // go back to the editor from terminal window
     {
         "key": "ctrl+shift+k",
         "command": "workbench.action.focusActiveEditorGroup",
         "when": "terminalFocus"
     },
-    // Navigate between chat window and editor window
+    // go to the chat window
     {
-        "key": "shift+cmd+i",
-        "command": "workbench.action.focusActiveEditorGroup",
-        "when": "inChatInput"
+        "key": "ctrl+shift+l",
+        "command": "workbench.action.focusAuxiliaryBar",
+        "when": "editorFocus"
     },
+    // go back to editor from chat winddow
+    {
+        "key": "ctrl+shift+h",
+        "command": "workbench.action.focusActiveEditorGroup",
+        "when": "auxiliaryBarFocus"
+    },
+    // ***
     // rich editor actions
+    // ***
     {
         "key": "cmd+shift+r",
         "command": "code-runner.run",
@@ -77,7 +103,11 @@
         "when": "editorTextFocus && !editorReadonly"
     },
     {
-        "key": "cmd+p",
+        "key": "cmd+o",
+        "command": "workbench.action.gotoSymbol",
+    },
+    {
+        "key": "cmd+shift+o",
         "command": "workbench.action.showAllSymbols",
     },
     {
@@ -104,13 +134,19 @@
         "when": "vim.mode == 'Normal' && editorTextFocus && vim.active && !inDebugRepl && !quickFixWidgetVisible && !suggestWidgetVisible"
     },
     {
-        "key": "ctrl+g",
-        "command": "editor.action.goToDeclaration",
+        "key": "cmd+g",
+        "command": "editor.action.peekDefinition",
         "when": "vim.mode == 'Normal' && editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
     },
     {
         "key": "cmd+r",
         "command": "editor.action.referenceSearch.trigger",
+    },
+    // Enter peek reference editor while opening references.
+    {
+        "key": "tab",
+        "command": "togglePeekWidgetFocus",
+        "when": "inReferenceSearchEditor && vim.active && vim.mode != 'Insert' || referenceSearchVisible"
     },
     // In insert mode.
     {

@@ -28,3 +28,17 @@ for name in vimrc vim zshrc zsh tmux.conf; do
     symlink $PWD/$name $target
   fi
 done
+
+# link to vscode setting
+for name in settings.json keybindings.json extensions.json; do
+  target="$HOME/Library/Application Support/Code/User/$name"
+  backup $target
+  symlink $PWD/vscode/$name $target
+done
+
+# link to cursor setting
+for name in settings.json keybindings.json extensions.json; do
+  target="$HOME/Library/Application Support/Cursor/User/$name"
+  backup $target
+  symlink $PWD/vscode/$name $target  // same as vscode
+done
